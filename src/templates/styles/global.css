@@ -22,7 +22,7 @@
   --shadow: 0 10px 26px rgba(23, 25, 28, 0.052);
   --shadow-soft: 0 4px 10px rgba(23, 25, 28, 0.038);
   --shadow-footer: 0 -3px 10px rgba(23, 25, 28, 0.035);
-  --zoom-backdrop: rgba(246, 247, 248, 0.94);
+  --zoom-backdrop: rgba(246, 247, 248, 0.86);
   --scrollbar-thumb: rgba(23, 25, 28, 0.22);
   --scrollbar-thumb-hover: rgba(23, 25, 28, 0.34);
   --mobile-submenu-bg: color-mix(in srgb, var(--accent) 2%, #f8fafb);
@@ -62,7 +62,7 @@
     --shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
     --shadow-soft: 0 5px 12px rgba(0, 0, 0, 0.1);
     --shadow-footer: 0 -3px 10px rgba(0, 0, 0, 0.1);
-    --zoom-backdrop: rgba(37, 40, 45, 0.92);
+    --zoom-backdrop: rgba(37, 40, 45, 0.82);
     --scrollbar-thumb: rgba(245, 247, 249, 0.18);
     --scrollbar-thumb-hover: rgba(245, 247, 249, 0.28);
     --mobile-submenu-bg: color-mix(in srgb, var(--paper-muted) 62%, var(--paper-strong));
@@ -94,7 +94,7 @@
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
   --shadow-soft: 0 5px 12px rgba(0, 0, 0, 0.1);
   --shadow-footer: 0 -3px 10px rgba(0, 0, 0, 0.1);
-  --zoom-backdrop: rgba(37, 40, 45, 0.92);
+  --zoom-backdrop: rgba(37, 40, 45, 0.82);
   --scrollbar-thumb: rgba(245, 247, 249, 0.18);
   --scrollbar-thumb-hover: rgba(245, 247, 249, 0.28);
   --mobile-submenu-bg: color-mix(in srgb, var(--paper-muted) 62%, var(--paper-strong));
@@ -877,6 +877,20 @@ main {
   border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
+.tag-index {
+  gap: 8px;
+}
+
+.tag-index a {
+  gap: 7px;
+  padding: 7px 11px;
+  font-size: 1.18rem;
+}
+
+.tag-index small {
+  font-size: 0.7rem;
+}
+
 .page-head {
   padding: 38px 0 22px;
 }
@@ -1001,7 +1015,9 @@ main {
 .link-card {
   display: grid;
   align-content: start;
-  gap: 8px;
+  min-height: 78px;
+  gap: 6px;
+  padding: 10px 12px;
 }
 
 .link-card-head {
@@ -1009,6 +1025,12 @@ main {
   align-items: center;
   gap: 9px;
   min-width: 0;
+}
+
+.link-card p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .link-avatar {
@@ -1023,13 +1045,13 @@ main {
 
 .link-groups {
   display: grid;
-  gap: 26px;
+  gap: 16px;
   padding-bottom: 64px;
 }
 
 .link-group {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .link-group > h2 {
@@ -1275,11 +1297,11 @@ main {
 }
 
 .prose blockquote {
-  margin: 24px 0;
-  padding: 14px 16px;
-  color: var(--text);
-  background: var(--mark-soft);
-  border-left: 3px solid var(--accent);
+  margin: 20px 0;
+  padding: 12px 16px;
+  color: var(--text-soft);
+  background: color-mix(in srgb, var(--mark-soft) 42%, transparent);
+  border-left: 3px solid color-mix(in srgb, var(--accent) 42%, transparent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
@@ -1306,7 +1328,7 @@ main {
   background: var(--code-bg);
   border: 1px solid var(--code-line);
   border-radius: var(--card-radius);
-  box-shadow: 0 16px 38px rgba(23, 25, 28, 0.18);
+  box-shadow: none;
 }
 
 .prose pre::before {
@@ -1412,6 +1434,7 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-soft);
+  clip-path: inset(0 round var(--radius-sm));
   cursor: zoom-in;
 }
 
@@ -1425,7 +1448,7 @@ main {
   background: var(--zoom-backdrop);
   opacity: 0;
   pointer-events: none;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(10px);
   transition: opacity 0.16s ease;
 }
 
@@ -1449,7 +1472,8 @@ main {
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+  clip-path: inset(0 round var(--radius-sm));
 }
 
 .xg-lightbox figcaption {

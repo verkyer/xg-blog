@@ -32,8 +32,8 @@ const visible = sorted.slice(0, limit);
 
 <section class="sidebar-card list-card" aria-labelledby="category-title">
   <div class="section-heading">
-    <h2 id="category-title">热门分类</h2>
-    {categories.length > limit && <a class="more-link" href="/categories">更多</a>}
+    <h2 id="category-title">分类</h2>
+    <a class="more-link" href="/categories">更多</a>
   </div>
   <ul>
     {visible.map((category) => (
