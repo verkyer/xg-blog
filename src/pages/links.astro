@@ -8,14 +8,15 @@ const allLinks = linkData;
 <BaseLayout title="友链" description="小鸽志友情链接和常用资源。" canonical="/links">
   <section class="container page-head">
     <h1>友链与资源</h1>
-    <p>一些相关站点和常用技术资源。</p>
   </section>
 
   <section class="container taxonomy-grid">
     {allLinks.map((link) => (
-      <a class="taxonomy-card" href={link.url} target="_blank" rel="noopener noreferrer">
-        <span>外部链接</span>
-        <h2>{link.name}</h2>
+      <a class="taxonomy-card link-card" href={link.url} target="_blank" rel="noopener noreferrer">
+        <div class="link-card-head">
+          {link.avatar && <img class="link-avatar" src={link.avatar} alt="" loading="lazy" />}
+          <h2>{link.name}</h2>
+        </div>
         <p>{link.description}</p>
       </a>
     ))}

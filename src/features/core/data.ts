@@ -68,6 +68,7 @@ export type LinkItem = {
   name: string;
   url: string;
   description: string;
+  avatar?: string;
 };
 
 type RawSiteData = Omit<SiteData, 'subtitle' | 'url' | 'logo' | 'theme' | 'author'> & {

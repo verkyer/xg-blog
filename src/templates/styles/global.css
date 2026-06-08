@@ -919,13 +919,13 @@ main {
 
 .taxonomy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
 .taxonomy-card {
-  min-height: 126px;
-  padding: 16px;
+  min-height: 104px;
+  padding: 13px;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--card-radius);
@@ -970,7 +970,31 @@ main {
 .taxonomy-card p {
   margin: 0;
   color: var(--text-soft);
-  font-size: 0.88rem;
+  font-size: 0.84rem;
+  line-height: 1.52;
+}
+
+.link-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.link-card-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.link-avatar {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  background: var(--paper-muted);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
 }
 
 .article-layout {
@@ -1619,6 +1643,10 @@ main {
 
   .article-aside {
     display: none;
+  }
+
+  .taxonomy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

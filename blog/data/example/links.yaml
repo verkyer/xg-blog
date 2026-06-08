@@ -1,7 +1,9 @@
 - name: Astro
   url: https://astro.build
   description: 内容站和静态博客框架。
+  avatar: https://astro.build/favicon.svg
 
 - name: Cloudflare
   url: https://www.cloudflare.com
   description: CDN、DNS 和 Pages/Workers 平台。
+  avatar: https://www.cloudflare.com/favicon.ico

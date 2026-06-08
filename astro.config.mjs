@@ -1,5 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { copyFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { loadEnv } from 'vite';
@@ -48,10 +50,22 @@ function readSiteUrl() {
 
 const site = readSiteUrl();
 
+function sitemapXmlAlias() {
+  return {
+    name: 'sitemap-xml-alias',
+    hooks: {
+      'astro:build:done': async ({ dir }) => {
+        const outDir = fileURLToPath(dir);
+        await copyFile(join(outDir, 'sitemap-index.xml'), join(outDir, 'sitemap.xml'));
+      },
+    },
+  };
+}
+
 export default defineConfig({
   site,
   publicDir: './blog/site',
-  integrations: [sitemap()],
+  integrations: [sitemap(), sitemapXmlAlias()],
   markdown: {
     shikiConfig: {
       themes: {
