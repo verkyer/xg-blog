@@ -1786,8 +1786,13 @@ main {
     gap: 6px;
   }
 
+  .theme-toggle {
+    order: 1;
+  }
+
   .nav-toggle {
     display: inline-flex;
+    order: 2;
     width: 34px;
     height: 34px;
     gap: 4px;
