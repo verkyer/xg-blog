@@ -163,13 +163,14 @@ function getCleanImageSrc(src) {
     }
 
     const originalPath = decodeURIComponent(href).split('?')[0].replace(/\\/g, '/');
-    const postsIndex = originalPath.indexOf('/blog/posts/');
+    const contentRoots = ['/blog/posts/', '/blog/pages/', '/example/posts/', '/example/pages/'];
+    const root = contentRoots.find((item) => originalPath.includes(item));
 
-    if (postsIndex === -1) {
+    if (!root) {
       return src;
     }
 
-    return originalPath.slice(postsIndex);
+    return originalPath.slice(originalPath.indexOf(root));
   } catch {
     return src;
   }

@@ -1,17 +1,20 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 import { parse } from 'smol-toml';
 
 const env = import.meta.env as unknown as Record<string, string | undefined>;
-const blogDir = join(process.cwd(), 'blog');
+const rootDir = process.cwd();
+const blogDir = join(rootDir, 'blog');
+const exampleDir = join(rootDir, 'example');
 const userPublicDir = join(blogDir, 'public');
-const examplePublicDir = join(blogDir, 'example', 'public');
+const defaultsPublicDir = join(rootDir, 'defaults', 'public');
+const faviconExtensions = ['.ico', '.svg', '.png', '.webp'];
 
 type TomlDocument = Record<string, unknown>;
 type TomlSource = 'user' | 'example' | 'empty';
 
-function readTomlFile(relativePath: string): TomlDocument | undefined {
-  const filePath = join(blogDir, relativePath);
+function readTomlFile(baseDir: string, relativePath: string): TomlDocument | undefined {
+  const filePath = join(baseDir, relativePath);
 
   if (!existsSync(filePath)) {
     return undefined;
@@ -21,13 +24,13 @@ function readTomlFile(relativePath: string): TomlDocument | undefined {
 }
 
 function readTomlSource(relativePath: string): { source: TomlSource; document: TomlDocument } {
-  const userDocument = readTomlFile(relativePath);
+  const userDocument = readTomlFile(blogDir, relativePath);
 
   if (userDocument) {
     return { source: 'user', document: userDocument };
   }
 
-  const exampleDocument = readTomlFile(join('example', relativePath));
+  const exampleDocument = readTomlFile(exampleDir, relativePath);
 
   if (exampleDocument) {
     return { source: 'example', document: exampleDocument };
@@ -62,6 +65,7 @@ export type SiteData = {
   subtitle: string;
   description: string;
   url: string;
+  favicon: string;
   logo: string;
   darkLogo: string;
   showTitle: boolean;
@@ -108,7 +112,35 @@ function publicAssetExists(path: string) {
   }
 
   const relativePath = path.slice(1);
-  return existsSync(join(userPublicDir, relativePath)) || existsSync(join(examplePublicDir, relativePath));
+  return existsSync(join(userPublicDir, relativePath)) || existsSync(join(defaultsPublicDir, relativePath));
+}
+
+function findUserFavicon() {
+  if (!existsSync(userPublicDir)) {
+    return undefined;
+  }
+
+  for (const extension of faviconExtensions) {
+    const name = `favicon${extension}`;
+
+    if (existsSync(join(userPublicDir, name))) {
+      return `/${name}`;
+    }
+  }
+
+  for (const extension of faviconExtensions) {
+    const match = readdirSync(userPublicDir, { withFileTypes: true }).find((entry) => {
+      const entryExtension = extname(entry.name).toLowerCase();
+      const entryName = entry.name.slice(0, -entryExtension.length).toLowerCase();
+      return entry.isFile() && entryName === 'favicon' && entryExtension === extension;
+    });
+
+    if (match) {
+      return `/${match.name}`;
+    }
+  }
+
+  return undefined;
 }
 
 function resolveConfiguredAsset(path: string | null | undefined) {
@@ -197,6 +229,10 @@ function resolveSiteUrl(configured: string | null | undefined) {
   return trimmed || 'https://www.xiaoge.org';
 }
 
+function resolveFavicon() {
+  return findUserFavicon() ?? '/favicon.ico';
+}
+
 function resolveBoolean(configured: string | boolean | number | null | undefined, fallback: boolean) {
   if (typeof configured === 'boolean') {
     return configured;
@@ -224,6 +260,7 @@ function resolveSiteData(): SiteData {
     subtitle: readEnv('BLOG_SUBTITLE') ?? '记录与分享',
     description: readEnv('BLOG_DESCRIPTION') ?? '这里填写站点描述，用于首页和 SEO。',
     url: resolveSiteUrl(readEnv('BLOG_URL')),
+    favicon: resolveFavicon(),
     logo,
     darkLogo,
     showTitle: resolveBoolean(readEnv('BLOG_SHOW_TITLE'), true),

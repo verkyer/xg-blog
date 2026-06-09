@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { copyFile, cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,8 +27,10 @@ function readSiteUrl() {
 }
 
 const site = readSiteUrl();
-const userPublicDir = join(process.cwd(), 'blog', 'public');
-const examplePublicDir = join(process.cwd(), 'blog', 'example', 'public');
+const rootDir = process.cwd();
+const userPublicDir = join(rootDir, 'blog', 'public');
+const defaultsPublicDir = join(rootDir, 'defaults', 'public');
+const faviconExtensions = ['.ico', '.svg', '.png', '.webp'];
 
 function contentType(filePath) {
   const typeByExtension = {
@@ -56,7 +58,35 @@ function isInsideDir(parent, child) {
   return path === '' || (!path.startsWith('..') && !isAbsolute(path));
 }
 
-async function copyMissing(sourceDir, targetDir) {
+function findUserFavicon() {
+  if (!existsSync(userPublicDir)) {
+    return undefined;
+  }
+
+  for (const extension of faviconExtensions) {
+    const name = `favicon${extension}`;
+
+    if (existsSync(join(userPublicDir, name))) {
+      return name;
+    }
+  }
+
+  for (const extension of faviconExtensions) {
+    const match = readdirSync(userPublicDir, { withFileTypes: true }).find((entry) => {
+      const entryExtension = extname(entry.name).toLowerCase();
+      const entryName = entry.name.slice(0, -entryExtension.length).toLowerCase();
+      return entry.isFile() && entryName === 'favicon' && entryExtension === extension;
+    });
+
+    if (match) {
+      return match.name;
+    }
+  }
+
+  return undefined;
+}
+
+async function copyMissing(sourceDir, targetDir, shouldSkip, baseDir = sourceDir) {
   if (!existsSync(sourceDir)) {
     return;
   }
@@ -68,15 +98,20 @@ async function copyMissing(sourceDir, targetDir) {
     const target = join(targetDir, entry.name);
 
     if (entry.isDirectory()) {
-      await copyMissing(source, target);
-    } else if (entry.isFile() && !existsSync(target)) {
+      await copyMissing(source, target, shouldSkip, baseDir);
+    } else if (entry.isFile() && !shouldSkip?.(relative(baseDir, source).replace(/\\/g, '/')) && !existsSync(target)) {
       await copyFile(source, target);
     }
   }
 }
 
 async function copyPublicAssets(outDir) {
-  await copyMissing(examplePublicDir, outDir);
+  const userFavicon = findUserFavicon();
+  await copyMissing(
+    defaultsPublicDir,
+    outDir,
+    (relativePath) => Boolean(userFavicon) && relativePath.toLowerCase() === 'favicon.ico',
+  );
 
   if (existsSync(userPublicDir)) {
     await cp(userPublicDir, outDir, { recursive: true, force: true });
@@ -133,15 +168,20 @@ function publicAssetOverlay() {
             return;
           }
 
-          const exampleFile = resolve(examplePublicDir, relativePath);
+          if (relativePath.toLowerCase() === 'favicon.ico' && findUserFavicon()) {
+            next();
+            return;
+          }
 
-          if (!isInsideDir(examplePublicDir, exampleFile)) {
+          const defaultsFile = resolve(defaultsPublicDir, relativePath);
+
+          if (!isInsideDir(defaultsPublicDir, defaultsFile)) {
             next();
             return;
           }
 
           try {
-            const info = await stat(exampleFile);
+            const info = await stat(defaultsFile);
 
             if (!info.isFile()) {
               next();
@@ -149,14 +189,14 @@ function publicAssetOverlay() {
             }
 
             response.statusCode = 200;
-            response.setHeader('Content-Type', contentType(exampleFile));
+            response.setHeader('Content-Type', contentType(defaultsFile));
 
             if (request.method === 'HEAD') {
               response.end();
               return;
             }
 
-            response.end(await readFile(exampleFile));
+            response.end(await readFile(defaultsFile));
           } catch {
             next();
           }

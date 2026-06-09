@@ -21,6 +21,6 @@ comments: false
 | 项目 | 示例 |
 | --- | --- |
 | 页面路径 | `/demo-page` |
-| 模板位置 | `blog/example/pages/demo-page/index.md` |
+| 模板位置 | `example/pages/demo-page/index.md` |
 | 用户页面位置 | `blog/pages/{slug}/index.md` |
 | 图片路径 | `./img/demo-page-1.svg` |

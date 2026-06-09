@@ -1,5 +1,5 @@
 ---
-import { absoluteUrl, pageTitle, resolveImage } from '../../features/core/seo';
+import { absoluteUrl, getSite, pageTitle, resolveImage } from '../../features/core/seo';
 
 interface Props {
   title?: string;
@@ -14,11 +14,13 @@ const { title, description, canonical = Astro.url.pathname, image, type = 'websi
 const fullTitle = pageTitle(title);
 const canonicalUrl = absoluteUrl(canonical);
 const imageUrl = resolveImage(image);
+const favicon = getSite().favicon;
 ---
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
+<link rel="icon" href={favicon} />
 <meta property="og:type" content={type} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />

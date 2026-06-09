@@ -7,8 +7,8 @@ const contentEntryId = ({ entry }: { entry: string }) =>
 
 const posts = defineCollection({
   loader: glob({
-    pattern: ['posts/**/index.md', 'example/posts/**/index.md'],
-    base: './blog',
+    pattern: ['blog/posts/**/index.md', 'example/posts/**/index.md'],
+    base: './',
     generateId: contentEntryId,
   }),
   schema: z.object({
@@ -26,8 +26,8 @@ const posts = defineCollection({
 
 const pages = defineCollection({
   loader: glob({
-    pattern: ['pages/*/index.md', 'example/pages/*/index.md'],
-    base: './blog',
+    pattern: ['blog/pages/*/index.md', 'example/pages/*/index.md'],
+    base: './',
     generateId: contentEntryId,
   }),
   schema: z.object({

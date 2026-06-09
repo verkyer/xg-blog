@@ -21,8 +21,6 @@ UI功能需求.md
 
 # Local TOML config
 blog/*.toml
-!blog/example/
-!blog/example/**
 
 # Local article content
 blog/posts/**

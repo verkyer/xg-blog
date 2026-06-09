@@ -7,7 +7,7 @@ export type Post = CollectionEntry<'posts'>;
 
 const postAssetUrls = import.meta.glob([
   '../../../blog/posts/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
-  '../../../blog/example/posts/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
+  '../../../example/posts/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
 ], {
   eager: true,
   import: 'default',
@@ -44,7 +44,7 @@ function normalizePostAssetPath(path: string) {
 }
 
 function getPostAssetUrl(post: Post, path: string) {
-  const key = `../../../blog/${getEntryAssetDir(post.id)}/${normalizePostAssetPath(path)}`;
+  const key = `../../../${getEntryAssetDir(post.id)}/${normalizePostAssetPath(path)}`;
   return postAssetUrls[key];
 }
 
