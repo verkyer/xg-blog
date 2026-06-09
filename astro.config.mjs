@@ -53,7 +53,7 @@ function notFoundRedirectsFile() {
 
 export default defineConfig({
   site,
-  publicDir: './blog/site-img',
+  publicDir: './blog/images',
   integrations: [sitemap(), sitemapXmlAlias(), notFoundRedirectsFile()],
   markdown: {
     shikiConfig: {

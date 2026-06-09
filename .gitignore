@@ -37,8 +37,12 @@ blog/pages/**
 !blog/pages/about/
 !blog/pages/about/**
 
-# Optional legacy public uploads
-blog/site-img/upload/
+# Local public images
+blog/images/**
+!blog/images/
+!blog/images/default-cover.svg
+!blog/images/default-logo.svg
+!blog/images/default-user.svg
 
 # OS / editor
 .DS_Store

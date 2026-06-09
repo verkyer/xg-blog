@@ -104,7 +104,7 @@ function publicAssetExists(path: string) {
     return false;
   }
 
-  return existsSync(join(process.cwd(), 'blog', 'site-img', path.slice(1)));
+  return existsSync(join(process.cwd(), 'blog', 'images', path.slice(1)));
 }
 
 function resolveConfiguredAsset(path: string | null | undefined) {

@@ -10,7 +10,7 @@
 │  ├─ posts/                # 文章：每篇一个目录，包含 index.md 和 img/
 │  ├─ pages/                # 自定义一级页面：每页一个目录，包含 index.md
 │  ├─ example/              # 可提交的 TOML 模板，也作为默认 fallback
-│  ├─ site-img/             # 公开图片资源：logo、深色 logo、默认封面、默认头像、upload/
+│  ├─ images/               # 公开图片资源：默认封面、默认 logo、默认头像；用户自定义图片默认不提交
 │  ├─ menu.toml             # 本地导航菜单，默认不提交
 │  ├─ categories.toml       # 本地分类显示信息，默认不提交
 │  ├─ tags.toml             # 本地标签显示信息，默认不提交
@@ -85,7 +85,9 @@ desc = "示例站点"
 icon = "https://example.com/icon.png"
 ```
 
-## 文章结构
+## 文章结构简版
+
+完整规则见 `文章内容结构要求.md`。
 
 文章使用一篇一个目录：
 
@@ -124,7 +126,11 @@ comments: false
 4. `img/{slug}-1.*`。
 5. `/default-cover.svg`。
 
-## 自定义页面
+默认封面文件位于 `blog/images/default-cover.svg`，构建后使用根路径 `/default-cover.svg` 访问。
+
+## 页面结构简版
+
+完整规则见 `页面结构需求.md`。
 
 自定义页面放在 `blog/pages/{slug}/index.md`，只支持一级路径。文件夹名就是 URL：
 
@@ -144,7 +150,7 @@ comments: false
 ---
 ```
 
-页面正文可以使用 Markdown 和相对图片，例如 `./img/example.svg`。`comments` 字段先保留，不开发评论 UI。
+页面正文可以使用 Markdown 和相对图片，例如 `./img/example.svg`。页面不要写 `slug`、`date`、`categories`、`tags`、`cover`、`top`；这些字段只属于文章。`comments` 字段先保留，不开发评论 UI。
 
 ## 环境变量
 
@@ -167,7 +173,7 @@ comments: false
 
 1. `blog/*.toml`、`.env`、用户新增文章和页面默认不提交。
 2. `blog/example/*.toml`、`blog/posts/hello-world/**`、`blog/pages/about/**` 是可提交示例。
-3. `blog/site-img/` 是公开图片目录，构建后可直接用根路径访问；例如 `blog/site-img/banner.png` 使用 `/banner.png`，`blog/site-img/upload/a.png` 使用 `/upload/a.png`。
+3. `blog/images/` 是公开图片目录，构建后可直接用根路径访问；例如 `blog/images/banner.png` 使用 `/banner.png`。目录中仅 `default-cover.svg`、`default-logo.svg`、`default-user.svg` 提交到 Git，其余用户自定义图片默认不提交。
 4. `dist/`、`.astro/`、`output/`、`.playwright-cli/` 是运行或构建产物，不提交。
 5. `/robots.txt` 由 `src/pages/robots.txt.ts` 在构建时生成。
 
