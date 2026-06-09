@@ -1343,7 +1343,12 @@ main {
 }
 
 .prose blockquote p {
+  margin: 0;
   color: inherit;
+}
+
+.prose blockquote p + p {
+  margin-top: 0.72em;
 }
 
 .prose code:not(pre code) {
@@ -1468,6 +1473,7 @@ main {
 .prose img {
   display: block;
   margin: 24px auto;
+  background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -1507,7 +1513,7 @@ main {
   max-width: 100%;
   max-height: calc(100vh - 124px);
   object-fit: contain;
-  background: var(--paper);
+  background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
