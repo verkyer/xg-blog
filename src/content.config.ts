@@ -33,6 +33,7 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    date: z.coerce.date(),
     comments: z.boolean().optional().default(false),
   }),
 });

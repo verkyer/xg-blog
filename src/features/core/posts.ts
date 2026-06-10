@@ -94,7 +94,7 @@ export function getPostCover(post: Post) {
     `img/${slug}-1.jpeg`,
   ];
 
-  return candidates.map((path) => getPostAssetUrl(post, path)).find(Boolean) ?? '/default/default-cover.svg';
+  return candidates.map((path) => getPostAssetUrl(post, path)).find(Boolean) ?? '/default/default-cover.webp';
 }
 
 export function groupPostsByMonth(posts: Post[]) {

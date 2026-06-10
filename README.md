@@ -29,8 +29,9 @@
 │  ├─ favicon.ico
 │  └─ default/
 │     ├─ default-logo.svg
+│     ├─ default-logo-dark.svg
 │     ├─ default-user.svg
-│     └─ default-cover.svg
+│     └─ default-cover.webp
 ├─ src/                          # Astro 路由、组件、样式和核心逻辑
 ├─ .env.example                  # 复制为 .env 后修改
 ├─ astro.config.mjs
@@ -119,7 +120,7 @@ comments: false
 2. `img/cover.*`。
 3. 文章根目录的 `cover.*`。
 4. `img/{slug}-1.*`。
-5. `/default/default-cover.svg`。
+5. `/default/default-cover.webp`。
 
 ## 页面简版
 
@@ -139,6 +140,7 @@ blog/pages/
 ---
 title: "关于"
 description: "关于这个站点和内容方向。"
+date: "2026-06-09"
 comments: false
 ---
 
@@ -151,7 +153,7 @@ comments: false
 ![页面配图](./img/about-1.webp)
 ```
 
-页面不要写 `slug`、`date`、`categories`、`tags`、`cover`、`top`，这些字段只属于文章。
+页面不要写 `slug`、`categories`、`tags`、`cover`、`top`，这些字段只属于文章。
 
 ## 公开资源
 
@@ -175,8 +177,9 @@ comments: false
 | --- | --- |
 | `defaults/public/favicon.ico` | `/favicon.ico` |
 | `defaults/public/default/default-logo.svg` | `/default/default-logo.svg` |
+| `defaults/public/default/default-logo-dark.svg` | `/default/default-logo-dark.svg` |
 | `defaults/public/default/default-user.svg` | `/default/default-user.svg` |
-| `defaults/public/default/default-cover.svg` | `/default/default-cover.svg` |
+| `defaults/public/default/default-cover.webp` | `/default/default-cover.webp` |
 
 如果不放自定义 logo、头像或封面，站点会使用这些缺省资源。也可以在 `.env` 中把 `BLOG_LOGO`、`BLOG_LOGO_DARK`、`BLOG_AVATAR` 设置为 `/logo.png`、`/logo-dark.png`、`/user.webp` 这类路径。
 
@@ -189,7 +192,7 @@ comments: false
 | `BLOG_DESCRIPTION` | SEO 描述 |
 | `BLOG_URL` | 正式站点 URL；影响 sitemap、RSS、robots |
 | `BLOG_LOGO` | logo 路径；未设置时自动读取 `/logo.*`，否则使用 `/default/default-logo.svg` |
-| `BLOG_LOGO_DARK` | 深色模式 logo 路径；未设置时自动读取 `/logo-dark.*`，否则使用 `BLOG_LOGO` |
+| `BLOG_LOGO_DARK` | 深色模式 logo 路径；未设置时自动读取 `/logo-dark.*`，否则使用 `/default/default-logo-dark.svg` |
 | `BLOG_SHOW_TITLE` | 是否显示站点标题 |
 | `THEME_COLOR` | 主题色，必须是 3 位或 6 位十六进制颜色 |
 | `BLOG_AUTHOR` | 作者名称 |

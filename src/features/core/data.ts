@@ -194,6 +194,12 @@ function resolveSiteDarkLogo(configured: string | null | undefined, fallbackLogo
     '/logo-dark.png',
     '/logo-dark.jpg',
     '/logo-dark.jpeg',
+    '/default/default-logo-dark.svg',
+    '/default/default-logo-dark.avif',
+    '/default/default-logo-dark.webp',
+    '/default/default-logo-dark.png',
+    '/default/default-logo-dark.jpg',
+    '/default/default-logo-dark.jpeg',
   ]) ?? fallbackLogo;
 }
 

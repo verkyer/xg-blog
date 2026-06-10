@@ -7,7 +7,7 @@ categories:
   - website
 tags:
   - hello-world
-cover: "./img/cover.svg"
+cover: "./img/cover.webp"
 top: 0
 comments: false
 ---
@@ -53,7 +53,7 @@ console.log(`Current post: ${message}`);
 | --- | --- |
 | 分类 | `website` |
 | 标签 | `hello-world` |
-| 封面 | `./img/cover.svg` |
+| 封面 | `./img/cover.webp` |
 
 ## 链接和分隔线
 
