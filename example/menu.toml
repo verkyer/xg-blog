@@ -36,6 +36,6 @@ label = "友链"
 href = "/links"
 
 [[menu]]
-label = "外部链接"
-href = "https://example.com"
+label = "项目地址"
+href = "https://github.com/verkyer/xg-blog"
 target = "blank"

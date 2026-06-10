@@ -10,7 +10,7 @@
   --line: rgba(23, 25, 28, 0.08);
   --line-strong: rgba(23, 25, 28, 0.14);
   --hover-outline: rgba(23, 25, 28, 0.5);
-  --accent: var(--theme-color, #6aa6c8);
+  --accent: var(--theme-color, #2D96E4);
   --accent-strong: color-mix(in srgb, var(--accent) 70%, var(--text));
   --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
   --mark: #17191c;
@@ -50,7 +50,7 @@
     --line: rgba(245, 247, 249, 0.09);
     --line-strong: rgba(245, 247, 249, 0.16);
     --hover-outline: rgba(245, 247, 249, 0.5);
-    --accent: var(--theme-color, #8fb9d4);
+    --accent: var(--theme-color, #2D96E4);
     --accent-strong: color-mix(in srgb, var(--accent) 68%, #ffffff);
     --accent-soft: color-mix(in srgb, var(--accent) 18%, transparent);
     --mark: #f1f3f4;
@@ -82,7 +82,7 @@
   --line: rgba(245, 247, 249, 0.09);
   --line-strong: rgba(245, 247, 249, 0.16);
   --hover-outline: rgba(245, 247, 249, 0.5);
-  --accent: var(--theme-color, #8fb9d4);
+  --accent: var(--theme-color, #2D96E4);
   --accent-strong: color-mix(in srgb, var(--accent) 68%, #ffffff);
   --accent-soft: color-mix(in srgb, var(--accent) 18%, transparent);
   --mark: #f1f3f4;

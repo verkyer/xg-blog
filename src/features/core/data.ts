@@ -227,7 +227,7 @@ function resolveThemeColor(configured: string | null | undefined) {
     return trimmed;
   }
 
-  return '#6aa6c8';
+  return '#2D96E4';
 }
 
 function resolveSiteUrl(configured: string | null | undefined) {
