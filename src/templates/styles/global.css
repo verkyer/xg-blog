@@ -780,25 +780,25 @@ button.submenu-link {
 .author-card::after {
   content: "";
   position: absolute;
-  right: -104px;
-  top: auto;
-  bottom: -112px;
+  right: -142px;
+  top: 2%;
+  bottom: auto;
   z-index: 0;
   width: 196px;
-  height: 196px;
-  border: 1px solid var(--author-decor-ring-b);
+  height: 184px;
+  border: 2px solid var(--author-decor-ring-a);
   border-radius: 999px;
   pointer-events: none;
 }
 
 .author-card-decor {
   position: absolute;
-  right: -196px;
-  top: -174px;
+  right: -33px;
+  top: -33px;
   z-index: 0;
-  width: 260px;
-  height: 260px;
-  border: 1px solid var(--author-decor-ring-a);
+  width: 66px;
+  height: 66px;
+  border: 1px solid var(--author-decor-ring-b);
   border-radius: 999px;
   pointer-events: none;
 }
