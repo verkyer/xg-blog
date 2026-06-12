@@ -196,6 +196,12 @@ function initImageZoom() {
   }
 
   let activeIndex = 0;
+  let scale = 1;
+  let defaultScale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let dragState = null;
+  let suppressBackdropClick = false;
 
   const lightbox = document.createElement('div');
   lightbox.className = 'xg-lightbox';
@@ -203,14 +209,31 @@ function initImageZoom() {
   lightbox.setAttribute('aria-modal', 'true');
   lightbox.setAttribute('aria-label', '图片预览');
   lightbox.innerHTML = `
-    <button class="xg-lightbox-close" type="button" aria-label="关闭图片预览">
-      <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 5l8 8M13 5l-8 8" /></svg>
-    </button>
+    <div class="xg-lightbox-toolbar" aria-label="图片预览工具">
+      <button class="xg-lightbox-actual" type="button" aria-label="按 1:1 显示">1:1</button>
+      <button class="xg-lightbox-fit" type="button" aria-label="适合页面显示">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6 4H4v2M12 4h2v2M14 12v2h-2M4 12v2h2M6.5 6.5h5v5h-5z" /></svg>
+      </button>
+      <button class="xg-lightbox-zoom-out" type="button" aria-label="缩小">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="4.5" /><path d="M5.5 7.5h4M11 11l3.5 3.5" /></svg>
+      </button>
+      <button class="xg-lightbox-zoom-in" type="button" aria-label="放大">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="7.5" cy="7.5" r="4.5" /><path d="M7.5 5.5v4M5.5 7.5h4M11 11l3.5 3.5" /></svg>
+      </button>
+      <button class="xg-lightbox-download" type="button" aria-label="下载当前图片">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v8M6 8l3 3 3-3M4 14h10" /></svg>
+      </button>
+      <button class="xg-lightbox-close" type="button" aria-label="关闭图片预览">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 5l8 8M13 5l-8 8" /></svg>
+      </button>
+    </div>
     <button class="xg-lightbox-prev" type="button" aria-label="上一张图片">
       <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 4 7 9l4 5" /></svg>
     </button>
     <figure>
-      <img alt="" />
+      <div class="xg-lightbox-stage">
+        <img alt="" />
+      </div>
       <figcaption><span class="xg-lightbox-caption"></span><span class="xg-lightbox-counter"></span></figcaption>
     </figure>
     <button class="xg-lightbox-next" type="button" aria-label="下一张图片">
@@ -220,25 +243,138 @@ function initImageZoom() {
 
   document.body.append(lightbox);
 
+  const stage = lightbox.querySelector('.xg-lightbox-stage');
   const preview = lightbox.querySelector('img');
   const caption = lightbox.querySelector('.xg-lightbox-caption');
   const counter = lightbox.querySelector('.xg-lightbox-counter');
+  const actualButton = lightbox.querySelector('.xg-lightbox-actual');
+  const fitButton = lightbox.querySelector('.xg-lightbox-fit');
+  const zoomOutButton = lightbox.querySelector('.xg-lightbox-zoom-out');
+  const zoomInButton = lightbox.querySelector('.xg-lightbox-zoom-in');
+  const downloadButton = lightbox.querySelector('.xg-lightbox-download');
   const closeButton = lightbox.querySelector('.xg-lightbox-close');
   const prevButton = lightbox.querySelector('.xg-lightbox-prev');
   const nextButton = lightbox.querySelector('.xg-lightbox-next');
 
-  if (!preview || !caption || !counter || !closeButton || !prevButton || !nextButton) {
+  if (
+    !stage ||
+    !preview ||
+    !caption ||
+    !counter ||
+    !actualButton ||
+    !fitButton ||
+    !zoomOutButton ||
+    !zoomInButton ||
+    !downloadButton ||
+    !closeButton ||
+    !prevButton ||
+    !nextButton
+  ) {
     return;
   }
+
+  const getCurrentImageSrc = () => {
+    const image = images[activeIndex];
+    return image.dataset.fullSrc || image.currentSrc || image.src;
+  };
+
+  const getAvailableSize = () => {
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+    const sideControls = isMobile ? 112 : 156;
+    const verticalControls = isMobile ? 136 : 148;
+
+    return {
+      width: Math.max(180, window.innerWidth - sideControls),
+      height: Math.max(180, window.innerHeight - verticalControls),
+    };
+  };
+
+  const updateControls = () => {
+    const isAtDefault = scale <= defaultScale + 0.001;
+    const isActual = Math.abs(scale - 1) <= 0.001;
+
+    zoomOutButton.disabled = isAtDefault;
+    actualButton.setAttribute('aria-pressed', String(isActual));
+    fitButton.setAttribute('aria-pressed', String(isAtDefault));
+    stage.classList.toggle('is-zoomed', !isAtDefault);
+    preview.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) scale(${scale})`;
+  };
+
+  const syncStageSize = () => {
+    const naturalWidth = preview.naturalWidth || 1;
+    const naturalHeight = preview.naturalHeight || 1;
+    const available = getAvailableSize();
+    const isAtDefault = scale <= defaultScale + 0.001;
+    const scaledWidth = naturalWidth * scale;
+    const scaledHeight = naturalHeight * scale;
+
+    stage.style.width = `${Math.round(isAtDefault ? naturalWidth * defaultScale : Math.min(available.width, scaledWidth))}px`;
+    stage.style.height = `${Math.round(isAtDefault ? naturalHeight * defaultScale : Math.min(available.height, scaledHeight))}px`;
+  };
+
+  const clampTranslate = () => {
+    const imageWidth = preview.naturalWidth * scale;
+    const imageHeight = preview.naturalHeight * scale;
+    const stageRect = stage.getBoundingClientRect();
+    const maxX = Math.max(0, (imageWidth - stageRect.width) / 2);
+    const maxY = Math.max(0, (imageHeight - stageRect.height) / 2);
+
+    translateX = Math.min(maxX, Math.max(-maxX, translateX));
+    translateY = Math.min(maxY, Math.max(-maxY, translateY));
+  };
+
+  const setScale = (nextScale) => {
+    scale = Math.max(defaultScale, Math.min(4, nextScale));
+    syncStageSize();
+    clampTranslate();
+    updateControls();
+  };
+
+  const fitToPage = () => {
+    scale = defaultScale;
+    translateX = 0;
+    translateY = 0;
+    syncStageSize();
+    updateControls();
+  };
+
+  const showActualSize = () => {
+    scale = Math.max(defaultScale, 1);
+    translateX = 0;
+    translateY = 0;
+    syncStageSize();
+    clampTranslate();
+    updateControls();
+  };
+
+  const resetView = () => {
+    const naturalWidth = preview.naturalWidth || 1;
+    const naturalHeight = preview.naturalHeight || 1;
+    const available = getAvailableSize();
+
+    defaultScale = Math.min(1, available.width / naturalWidth, available.height / naturalHeight);
+    scale = defaultScale;
+    translateX = 0;
+    translateY = 0;
+    preview.style.width = `${naturalWidth}px`;
+    preview.style.height = `${naturalHeight}px`;
+    syncStageSize();
+    updateControls();
+  };
 
   const render = () => {
     const image = images[activeIndex];
     const label = image.alt || '正文图片';
 
-    preview.src = image.dataset.fullSrc || image.currentSrc || image.src;
+    preview.onload = resetView;
+    preview.src = getCurrentImageSrc();
     preview.alt = label;
     caption.textContent = label;
     counter.textContent = `${activeIndex + 1} / ${images.length}`;
+
+    if (preview.complete && preview.naturalWidth) {
+      resetView();
+    }
   };
 
   const open = (index) => {
@@ -259,6 +395,93 @@ function initImageZoom() {
     render();
   };
 
+  const getDownloadName = () => {
+    const image = images[activeIndex];
+    const label = (image.alt || `image-${activeIndex + 1}`).trim();
+
+    try {
+      const url = new URL(getCurrentImageSrc(), window.location.href);
+      const filename = decodeURIComponent(url.pathname.split('/').filter(Boolean).pop() || '');
+
+      if (filename) {
+        return filename;
+      }
+    } catch {
+      // Fall back to the image label below.
+    }
+
+    return `${label.replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, '-').toLowerCase()}.png`;
+  };
+
+  const downloadCurrent = () => {
+    const link = document.createElement('a');
+    link.href = getCurrentImageSrc();
+    link.download = getDownloadName();
+    document.body.append(link);
+    link.click();
+    link.remove();
+  };
+
+  const startDrag = (event) => {
+    if (event.button !== undefined && event.button !== 0) {
+      return;
+    }
+
+    const isZoomed = scale > defaultScale + 0.001;
+    dragState = {
+      pointerId: event.pointerId,
+      mode: isZoomed ? 'pan' : 'swipe',
+      startX: event.clientX,
+      startY: event.clientY,
+      startTranslateX: translateX,
+      startTranslateY: translateY,
+      moved: false,
+    };
+    stage.classList.add('is-dragging');
+    stage.setPointerCapture?.(event.pointerId);
+  };
+
+  const drag = (event) => {
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const dx = event.clientX - dragState.startX;
+    const dy = event.clientY - dragState.startY;
+    dragState.moved = dragState.moved || Math.abs(dx) > 3 || Math.abs(dy) > 3;
+
+    if (dragState.mode === 'pan') {
+      translateX = dragState.startTranslateX + dx;
+      translateY = dragState.startTranslateY + dy;
+      clampTranslate();
+      updateControls();
+    }
+
+    event.preventDefault();
+  };
+
+  const endDrag = (event) => {
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const dx = event.clientX - dragState.startX;
+    const dy = event.clientY - dragState.startY;
+    const shouldSwipe = dragState.mode === 'swipe' && Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.2;
+
+    if (shouldSwipe) {
+      move(dx > 0 ? -1 : 1);
+    }
+
+    suppressBackdropClick = dragState.moved;
+    dragState = null;
+    stage.classList.remove('is-dragging');
+    stage.releasePointerCapture?.(event.pointerId);
+    window.setTimeout(() => {
+      suppressBackdropClick = false;
+    }, 0);
+  };
+
   images.forEach((image, index) => {
     image.tabIndex = 0;
     image.setAttribute('role', 'button');
@@ -275,9 +498,18 @@ function initImageZoom() {
   closeButton.addEventListener('click', close);
   prevButton.addEventListener('click', () => move(-1));
   nextButton.addEventListener('click', () => move(1));
+  actualButton.addEventListener('click', showActualSize);
+  fitButton.addEventListener('click', fitToPage);
+  zoomOutButton.addEventListener('click', () => setScale(scale / 1.25));
+  zoomInButton.addEventListener('click', () => setScale(scale * 1.25));
+  downloadButton.addEventListener('click', downloadCurrent);
+  stage.addEventListener('pointerdown', startDrag);
+  stage.addEventListener('pointermove', drag);
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
 
   lightbox.addEventListener('click', (event) => {
-    if (event.target === lightbox) {
+    if (event.target === lightbox && !suppressBackdropClick) {
       close();
     }
   });
@@ -293,6 +525,12 @@ function initImageZoom() {
       move(-1);
     } else if (event.key === 'ArrowRight') {
       move(1);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (lightbox.classList.contains('is-open') && preview.complete && preview.naturalWidth) {
+      resetView();
     }
   });
 }
