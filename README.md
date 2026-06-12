@@ -105,10 +105,10 @@ slug: "post-slug" # 当值为空或没有这个属性，默认使用文章文件
 description: "文章摘要。"
 date: "2026-06-09"
 categories:
-  - website
+  - "website"
 tags:
-  - astro
-  - markdown
+  - "astro"
+  - "markdown"
 cover: "./img/cover.webp"
 top: 0
 comments: false
@@ -215,5 +215,7 @@ comments: false
 ```powershell
 npm.cmd run build
 ```
+ 
+文章 frontmatter 中的 `categories` 和 `tags` 建议统一写成带引号字符串，例如 `- "website"`、`- "astro"`，可避免纯数字 slug 被 YAML 解析成 number。
 
 构建成功后，空用户内容会看到示例文章和示例页面；添加自己的文章或页面后，对应示例会自动消失。

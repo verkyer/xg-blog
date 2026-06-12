@@ -487,7 +487,7 @@ button.submenu-link {
   justify-content: start;
   gap: 16px;
   align-items: start;
-  padding: 24px 0 66px;
+  padding: 24px 0 32px;
 }
 
 .main-column {
@@ -1167,6 +1167,10 @@ button.submenu-link {
   padding-bottom: 64px;
 }
 
+.paginated-article-list {
+  padding-bottom: 32px;
+}
+
 .archive-group {
   padding: 18px 0 20px;
   border-top: 1px solid var(--line);
@@ -1279,6 +1283,7 @@ button.submenu-link {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -1315,6 +1320,79 @@ button.submenu-link {
   color: var(--text-soft);
   font-size: 0.84rem;
   line-height: 1.52;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px 0 0;
+}
+
+.pagination-pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination-pages li {
+  list-style: none;
+}
+
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 11px;
+  color: var(--text-soft);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.pagination-pages .pagination-link {
+  padding: 0 10px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.pagination-step {
+  gap: 6px;
+}
+
+.pagination-link:hover {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  transform: translateY(-1px);
+}
+
+.pagination-link.is-current {
+  color: var(--paper);
+  background: var(--text);
+  border-color: var(--text);
+  pointer-events: none;
+}
+
+.pagination-link.is-disabled {
+  color: var(--text-muted);
+  background: var(--paper-muted);
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .link-card {
@@ -2345,7 +2423,11 @@ button.submenu-link {
   .page-grid,
   .article-layout {
     padding-top: 24px;
-    padding-bottom: 46px;
+    padding-bottom: 32px;
+  }
+
+  .paginated-article-list {
+    padding-bottom: 32px;
   }
 
   .sidebar {

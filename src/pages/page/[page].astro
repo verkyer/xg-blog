@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import ArticleList from '../../templates/components/ArticleList.astro';
+import HomeBanner from '../../templates/components/HomeBanner.astro';
+import Pagination from '../../templates/components/Pagination.astro';
+import Sidebar from '../../templates/components/Sidebar.astro';
+import BaseLayout from '../../templates/layouts/BaseLayout.astro';
+import { bannerData } from '../../features/core/data';
+import { getAllPosts, type Post } from '../../features/core/posts';
+import { getSite } from '../../features/core/seo';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getAllPosts();
+  return paginate(posts, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<Post>;
+}
+
+const { page } = Astro.props;
+const posts = await getAllPosts();
+const site = getSite();
+const title = page.currentPage === 1 ? undefined : `第 ${page.currentPage} 页`;
+const canonical = page.currentPage === 1 ? '/' : `/page/${page.currentPage}`;
+---
+
+<BaseLayout title={title} description={site.description} canonical={canonical}>
+  <div class="container page-grid">
+    <section class="main-column" aria-label="最新文章">
+      {page.currentPage === 1 && <HomeBanner items={bannerData} />}
+      <ArticleList posts={page.data} />
+      <Pagination currentPage={page.currentPage} lastPage={page.lastPage} basePath="/page" firstPagePath="/" />
+    </section>
+    <Sidebar posts={posts} />
+  </div>
+</BaseLayout>

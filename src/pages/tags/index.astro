@@ -11,7 +11,10 @@ const sortedTags = [...tags].sort((a, b) => (counts.get(b.slug) ?? 0) - (counts.
 
 <BaseLayout title="标签" description="小鸽志全部文章标签。" canonical="/tags">
   <section class="container page-head">
-    <h1>标签</h1>
+    <div class="page-title-row">
+      <h1>标签</h1>
+      <span>{sortedTags.length} 个标签</span>
+    </div>
   </section>
 
   <section class="container tag-index">

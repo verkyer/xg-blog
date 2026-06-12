@@ -1,0 +1,58 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import BaseLayout from '../../../templates/layouts/BaseLayout.astro';
+import Pagination from '../../../templates/components/Pagination.astro';
+import { formatDate } from '../../../features/core/date';
+import { getAllPosts, getPostPath, groupPostsByMonth, type Post } from '../../../features/core/posts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getAllPosts();
+  return paginate(posts, { pageSize: 20 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<Post>;
+}
+
+const { page } = Astro.props;
+const groups = groupPostsByMonth(page.data);
+const title = page.currentPage === 1 ? '文章归档' : `文章归档 - 第 ${page.currentPage} 页`;
+const canonical = page.currentPage === 1 ? '/archives' : `/archives/page/${page.currentPage}`;
+---
+
+<BaseLayout title={title} description="小鸽志全部文章按发布时间归档。" canonical={canonical}>
+  <section class="container narrow page-head">
+    <div class="page-title-row">
+      <h1>文章归档</h1>
+      <span>共 {page.total} 篇文章</span>
+    </div>
+  </section>
+
+  <section class="container narrow archive-list">
+    {groups.map((group) => (
+      <section class="archive-group" aria-labelledby={`archive-${group.month}`}>
+        <header class="archive-month">
+          <h2 id={`archive-${group.month}`}>{group.month}</h2>
+          <span>{group.posts.length} 篇</span>
+        </header>
+        <ul class="archive-posts">
+          {group.posts.map((post) => (
+            <li>
+              <a class="archive-card" href={getPostPath(post)}>
+                <span>{post.data.title}</span>
+                <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      basePath="/archives/page"
+      firstPagePath="/archives"
+      label="归档分页"
+    />
+  </section>
+</BaseLayout>

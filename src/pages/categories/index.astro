@@ -10,7 +10,10 @@ const categories = await getAllCategories(posts);
 
 <BaseLayout title="分类目录" description="小鸽志全部文章分类目录。" canonical="/categories">
   <section class="container page-head">
-    <h1>分类目录</h1>
+    <div class="page-title-row">
+      <h1>分类目录</h1>
+      <span>{categories.length} 个分类</span>
+    </div>
   </section>
 
   <section class="container taxonomy-grid">

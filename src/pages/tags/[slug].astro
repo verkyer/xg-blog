@@ -1,8 +1,11 @@
 ---
 import ArticleList from '../../templates/components/ArticleList.astro';
+import Pagination from '../../templates/components/Pagination.astro';
 import BaseLayout from '../../templates/layouts/BaseLayout.astro';
 import { filterPostsByTag, getAllPosts } from '../../features/core/posts';
 import { getAllTags, getTag } from '../../features/core/taxonomy';
+
+const POSTS_PER_PAGE = 10;
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
@@ -14,15 +17,26 @@ const { slug } = Astro.params;
 const posts = await getAllPosts();
 const tag = getTag(slug!);
 const filteredPosts = filterPostsByTag(posts, slug!);
+const pagePosts = filteredPosts.slice(0, POSTS_PER_PAGE);
+const lastPage = Math.max(1, Math.ceil(filteredPosts.length / POSTS_PER_PAGE));
 ---
 
 <BaseLayout title={`#${tag.name}`} description={`标签 #${tag.name} 下的全部文章。`} canonical={`/tags/${tag.slug}`}>
   <section class="container narrow page-head">
-    <h1>#{tag.name}</h1>
-    <p>共 {filteredPosts.length} 篇文章。</p>
+    <div class="page-title-row">
+      <h1>#{tag.name}</h1>
+      <span>{filteredPosts.length} 篇文章</span>
+    </div>
   </section>
 
-  <section class="container narrow">
-    <ArticleList posts={filteredPosts} />
+  <section class="container narrow paginated-article-list">
+    <ArticleList posts={pagePosts} />
+    <Pagination
+      currentPage={1}
+      lastPage={lastPage}
+      basePath={`/tags/${tag.slug}/page`}
+      firstPagePath={`/tags/${tag.slug}`}
+      label={`标签 ${tag.name} 分页`}
+    />
   </section>
 </BaseLayout>

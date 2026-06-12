@@ -1,15 +1,22 @@
 ---
 import BaseLayout from '../../templates/layouts/BaseLayout.astro';
+import Pagination from '../../templates/components/Pagination.astro';
 import { formatDate } from '../../features/core/date';
 import { getAllPosts, getPostPath, groupPostsByMonth } from '../../features/core/posts';
 
+const POSTS_PER_ARCHIVE_PAGE = 20;
 const posts = await getAllPosts();
-const groups = groupPostsByMonth(posts);
+const pagePosts = posts.slice(0, POSTS_PER_ARCHIVE_PAGE);
+const groups = groupPostsByMonth(pagePosts);
+const lastPage = Math.max(1, Math.ceil(posts.length / POSTS_PER_ARCHIVE_PAGE));
 ---
 
 <BaseLayout title="文章归档" description="小鸽志全部文章按发布时间归档。" canonical="/archives">
   <section class="container narrow page-head">
-    <h1>文章归档</h1>
+    <div class="page-title-row">
+      <h1>文章归档</h1>
+      <span>共 {posts.length} 篇文章</span>
+    </div>
   </section>
 
   <section class="container narrow archive-list">
@@ -31,5 +38,6 @@ const groups = groupPostsByMonth(posts);
         </ul>
       </section>
     ))}
+    <Pagination currentPage={1} lastPage={lastPage} basePath="/archives/page" firstPagePath="/archives" label="归档分页" />
   </section>
 </BaseLayout>

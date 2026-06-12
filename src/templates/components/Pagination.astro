@@ -1,0 +1,58 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  basePath: string;
+  firstPagePath: string;
+  label?: string;
+}
+
+const { currentPage, lastPage, basePath, firstPagePath, label = '分页导航' } = Astro.props;
+const pageHref = (page: number) => (page === 1 ? firstPagePath : `${basePath}/${page}`);
+const pages = Array.from({ length: lastPage }, (_, index) => index + 1);
+const previousPage = currentPage > 1 ? currentPage - 1 : undefined;
+const nextPage = currentPage < lastPage ? currentPage + 1 : undefined;
+---
+
+{lastPage > 1 && (
+  <nav class="pagination" aria-label={label}>
+    {previousPage ? (
+      <a class="pagination-link pagination-step" href={pageHref(previousPage)} aria-label="上一页">
+        <span aria-hidden="true">&lt;</span>
+        <span>上一页</span>
+      </a>
+    ) : (
+      <span class="pagination-link pagination-step is-disabled" aria-label="上一页" aria-disabled="true">
+        <span aria-hidden="true">&lt;</span>
+        <span>上一页</span>
+      </span>
+    )}
+
+    <ol class="pagination-pages">
+      {pages.map((page) => (
+        <li>
+          <a
+            class:list={['pagination-link', { 'is-current': page === currentPage }]}
+            href={pageHref(page)}
+            aria-current={page === currentPage ? 'page' : undefined}
+            aria-label={`第 ${page} 页`}
+          >
+            {page}
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    {nextPage ? (
+      <a class="pagination-link pagination-step" href={pageHref(nextPage)} aria-label="下一页">
+        <span>下一页</span>
+        <span aria-hidden="true">&gt;</span>
+      </a>
+    ) : (
+      <span class="pagination-link pagination-step is-disabled" aria-label="下一页" aria-disabled="true">
+        <span>下一页</span>
+        <span aria-hidden="true">&gt;</span>
+      </span>
+    )}
+  </nav>
+)}

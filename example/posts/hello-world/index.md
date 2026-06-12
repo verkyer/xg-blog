@@ -4,9 +4,9 @@ slug: "hello-world"
 description: "一篇用于验证站点样式、分类、标签和图片资源的占位文章。"
 date: "2026-06-09"
 categories:
-  - website
+  - "website"
 tags:
-  - hello-world
+  - "hello-world"
 cover: "./img/cover.webp"
 top: 0
 comments: false

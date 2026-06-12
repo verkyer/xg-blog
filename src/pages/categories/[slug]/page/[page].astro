@@ -1,0 +1,52 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { TaxonomyItem } from '../../../../features/core/data';
+import ArticleList from '../../../../templates/components/ArticleList.astro';
+import Pagination from '../../../../templates/components/Pagination.astro';
+import BaseLayout from '../../../../templates/layouts/BaseLayout.astro';
+import { filterPostsByCategory, getAllPosts, type Post } from '../../../../features/core/posts';
+import { getAllCategories } from '../../../../features/core/taxonomy';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getAllPosts();
+  const categories = await getAllCategories(posts);
+
+  return categories.flatMap((category) =>
+    paginate(filterPostsByCategory(posts, category.slug), {
+      pageSize: 10,
+      params: { slug: category.slug },
+      props: { category },
+    }),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<Post>;
+  category: TaxonomyItem;
+}
+
+const { page, category } = Astro.props;
+const title = page.currentPage === 1 ? category.name : `${category.name} - 第 ${page.currentPage} 页`;
+const canonical = page.currentPage === 1 ? `/categories/${category.slug}` : `/categories/${category.slug}/page/${page.currentPage}`;
+---
+
+<BaseLayout title={title} description={category.description || `${category.name} 分类下的全部文章。`} canonical={canonical}>
+  <section class="container narrow page-head category-page-head">
+    <div class="page-title-row">
+      <h1>{category.name}</h1>
+      <span>{page.total} 篇文章</span>
+    </div>
+    <p>{category.description}</p>
+  </section>
+
+  <section class="container narrow paginated-article-list">
+    <ArticleList posts={page.data} />
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      basePath={`/categories/${category.slug}/page`}
+      firstPagePath={`/categories/${category.slug}`}
+      label={`${category.name} 分类分页`}
+    />
+  </section>
+</BaseLayout>
