@@ -43,3 +43,4 @@ blog/public/**
 Thumbs.db
 .vscode/
 !.vscode/extensions.json
+NUL

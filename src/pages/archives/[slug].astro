@@ -43,5 +43,14 @@ const seoImage = typeof cover === 'string' ? cover : (await getImage({ src: cove
       <TableOfContents headings={headings} />
     </aside>
   </article>
+  <script>
+    document.querySelectorAll('.article-main .prose a').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (href && !href.startsWith('#')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+  </script>
   <ArticleInteractions />
 </BaseLayout>
