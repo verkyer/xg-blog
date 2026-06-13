@@ -1652,6 +1652,12 @@ button.submenu-link {
   font-size: 1.34rem;
 }
 
+.prose > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
 .prose h3 {
   font-size: 1.12rem;
 }
