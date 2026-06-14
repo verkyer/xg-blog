@@ -503,7 +503,9 @@ button.submenu-link {
   inset: 0;
   z-index: 120;
   display: grid;
-  place-items: start center;
+  align-items: start;
+  justify-content: center;
+  justify-items: center;
   padding: 72px 16px 18px;
 }
 
@@ -529,12 +531,34 @@ button.submenu-link {
   max-height: min(760px, calc(100vh - 90px));
   overflow-y: auto;
   scrollbar-gutter: stable both-edges;
+  margin-inline: auto;
   padding: 12px;
   color: var(--text);
   background: var(--paper-strong);
   border: 1px solid var(--line);
   border-radius: var(--card-radius);
   box-shadow: var(--shadow);
+}
+
+.search-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-panel::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.search-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
 
 .search-panel-header {
@@ -636,9 +660,19 @@ button.submenu-link {
   width: 38px;
   padding: 0;
   color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-clear:focus,
+.search-panel .pagefind-ui .pagefind-ui__search-clear:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__search-clear:hover {
@@ -646,14 +680,15 @@ button.submenu-link {
 }
 
 .search-panel .pagefind-ui .pagefind-ui__result {
-  border-top-color: var(--line);
-  padding-top: 14px;
-  padding-bottom: 16px;
+  border-top-color: var(--line) !important;
+  padding-top: 6px !important;
+  padding-bottom: 12px !important;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__result-title {
-  font-size: 0.92rem;
-  line-height: 1.45;
+  margin: 0 0 3px !important;
+  font-size: 0.9rem !important;
+  line-height: 1.36 !important;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__result-title .pagefind-ui__result-link {
@@ -668,9 +703,9 @@ button.submenu-link {
 .search-panel .pagefind-ui .pagefind-ui__result-excerpt,
 .search-panel .pagefind-ui .pagefind-ui__message {
   color: var(--text-soft);
-  font-size: 0.84rem;
+  font-size: 0.8rem !important;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.42 !important;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__message {
@@ -690,22 +725,51 @@ button.submenu-link {
 
 .search-panel .pagefind-ui .pagefind-ui__result-excerpt {
   min-width: 0;
-  margin-top: 3px;
+  margin-top: 2px;
+  margin-bottom: 0;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__result-nested {
-  padding-left: 14px;
+  padding-left: 12px !important;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-nested .pagefind-ui__result-title {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  line-height: 1.42 !important;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-nested .pagefind-ui__result-link {
+  font-weight: 700 !important;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-nested .pagefind-ui__result-excerpt {
+  font-size: 0.78rem !important;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__button {
-  height: 36px;
-  margin-top: 14px;
-  font-size: 0.84rem;
-  font-weight: 600;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: max-content !important;
+  height: 32px;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  margin-top: 11px !important;
+  margin-bottom: 14px !important;
+  padding: 0 20px !important;
+  color: var(--text) !important;
+  background: var(--paper) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: none !important;
+  font-size: 0.84rem !important;
+  font-weight: 400 !important;
 }
 
 .search-panel .pagefind-ui .pagefind-ui__button:hover {
-  border-color: var(--hover-outline);
+  color: var(--accent-strong) !important;
+  border-color: var(--hover-outline) !important;
 }
 
 .search-panel .pagefind-ui mark {
