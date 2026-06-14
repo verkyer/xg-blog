@@ -5,7 +5,7 @@ import ArticleInteractions from '../../templates/components/ArticleInteractions.
 import PostMeta from '../../templates/components/PostMeta.astro';
 import TableOfContents from '../../templates/components/TableOfContents.astro';
 import BaseLayout from '../../templates/layouts/BaseLayout.astro';
-import { getAllPosts, getPostCover, getPostPath, getPostSlug } from '../../features/core/posts';
+import { getAllPosts, getPostCover, getPostPath, getPostSlug, getReadingStats } from '../../features/core/posts';
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
@@ -19,6 +19,7 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const cover = getPostCover(post);
 const seoImage = typeof cover === 'string' ? cover : (await getImage({ src: cover })).src;
+const readingStats = getReadingStats(post);
 ---
 
 <BaseLayout
@@ -33,7 +34,7 @@ const seoImage = typeof cover === 'string' ? cover : (await getImage({ src: cove
     <div class="article-main">
       <header class="article-header">
         <h1>{post.data.title}</h1>
-        <PostMeta date={post.data.date} categories={post.data.categories} tags={post.data.tags} />
+        <PostMeta date={post.data.date} categories={post.data.categories} tags={post.data.tags} readingStats={readingStats} />
       </header>
       <div class="prose">
         <Content />

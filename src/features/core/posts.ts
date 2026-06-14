@@ -6,6 +6,12 @@ import { getCategory, getTag, normalizeSlug } from './taxonomy';
 
 export type Post = CollectionEntry<'posts'>;
 export type PostCover = string | ImageMetadata;
+export type ReadingStats = {
+  words: number;
+  minutes: number;
+};
+
+const readingWordsPerMinute = 300;
 
 const postAssets = import.meta.glob([
   '../../../blog/posts/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
@@ -38,6 +44,32 @@ export function getPostSlug(post: Post) {
 
 export function getPostPath(post: Post) {
   return `/archives/${getPostSlug(post)}`;
+}
+
+function plainTextFromMarkdown(markdown: string) {
+  return markdown
+    .replace(/^---[\s\S]*?---/, ' ')
+    .replace(/```[\s\S]*?```/g, (block) => block.replace(/```[^\n]*\n?|```/g, ' '))
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/^[\s>#+\-*=|~]+/gm, ' ')
+    .replace(/[*_~[\](){}<>#"']/g, ' ');
+}
+
+export function getReadingStats(post: Post): ReadingStats {
+  const text = plainTextFromMarkdown(post.body ?? '');
+  const cjkCharacters = text.match(/[\u3400-\u9fff\uf900-\ufaff]/g) ?? [];
+  const latinWords = text
+    .replace(/[\u3400-\u9fff\uf900-\ufaff]/g, ' ')
+    .match(/[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)*/g) ?? [];
+  const words = cjkCharacters.length + latinWords.length;
+
+  return {
+    words,
+    minutes: Math.max(1, Math.ceil(words / readingWordsPerMinute)),
+  };
 }
 
 function normalizePostAssetPath(path: string) {

@@ -8,9 +8,13 @@ interface Props {
   tags: string[];
   compact?: boolean;
   showTags?: boolean;
+  readingStats?: {
+    words: number;
+    minutes: number;
+  };
 }
 
-const { date, categories, tags, compact = false, showTags = true } = Astro.props;
+const { date, categories, tags, compact = false, showTags = true, readingStats } = Astro.props;
 const primaryCategory = getCategory(categories[0]);
 const visibleTags = showTags ? tags.slice(0, compact ? 3 : tags.length) : [];
 ---
@@ -24,6 +28,15 @@ const visibleTags = showTags ? tags.slice(0, compact ? 3 : tags.length) : [];
     {formatDate(date)}
   </time>
   <a class="meta-link category" href={getCategoryPath(primaryCategory.slug)}>{primaryCategory.name}</a>
+  {readingStats && (
+    <span class="reading-stats">
+      <svg class="meta-reading-icon" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M5 3.5h5.2l2.8 2.8v8.2H5z" />
+        <path d="M10.2 3.5v2.8H13M7.2 9h3.6M7.2 11.5h3.6" />
+      </svg>
+      共 {readingStats.words} 字 · 约 {readingStats.minutes} 分
+    </span>
+  )}
   {visibleTags.length > 0 && (
     <span class="meta-tags">
       <svg class="meta-tag-icon" viewBox="0 0 18 18" aria-hidden="true">
