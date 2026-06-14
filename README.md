@@ -257,3 +257,7 @@ npm run build
 文章 frontmatter 中的 `categories` 和 `tags` 建议统一写成带引号字符串，例如 `- "website"`、`- "astro"`，可避免纯数字 slug 被 YAML 解析成 number。
 
 构建成功后，空用户内容会看到示例文章和示例页面；添加自己的文章或页面后，对应示例会自动消失。
+
+## 支持
+
+![QR](donation-qr-code.webp)
