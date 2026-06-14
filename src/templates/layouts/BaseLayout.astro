@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
+import SearchDialog from '../components/SearchDialog.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { getSite } from '../../features/core/seo';
@@ -41,6 +42,7 @@ const site = getSite();
   </head>
   <body>
     <SiteHeader currentPath={Astro.url.pathname} />
+    <SearchDialog />
     <main>
       <slot />
     </main>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && pagefind --site dist --glob \"archives/**/index.html\"",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -15,5 +15,8 @@
     "astro": "^5.15.5",
     "smol-toml": "^1.6.1",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

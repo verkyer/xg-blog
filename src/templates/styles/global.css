@@ -148,6 +148,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+:root[data-search-open] body {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration-color: color-mix(in srgb, currentColor 24%, transparent);
@@ -283,6 +287,7 @@ main {
 
 .top-nav .nav-link,
 .top-nav .submenu-link,
+.search-toggle,
 .theme-toggle,
 .nav-toggle,
 .submenu-toggle,
@@ -463,6 +468,7 @@ button.submenu-link {
   transform: translateY(-7px) rotate(-45deg);
 }
 
+.search-toggle,
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -476,9 +482,236 @@ button.submenu-link {
   transition: border-color 0.16s ease, color 0.16s ease;
 }
 
+.search-toggle svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.55;
+}
+
+.search-toggle:hover,
 .theme-toggle:hover {
   border-color: var(--hover-outline);
   color: var(--text);
+}
+
+.search-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: start center;
+  padding: 72px 16px 18px;
+}
+
+.search-dialog[hidden] {
+  display: none;
+}
+
+.search-backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+  border: 0;
+  backdrop-filter: blur(10px) saturate(0.9);
+  -webkit-backdrop-filter: blur(10px) saturate(0.9);
+  cursor: default;
+}
+
+.search-panel {
+  position: relative;
+  z-index: 1;
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 90px));
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  padding: 12px;
+  color: var(--text);
+  background: var(--paper-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+}
+
+.search-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 10px;
+}
+
+.search-panel-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.search-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text-soft);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.16s ease, color 0.16s ease;
+}
+
+.search-close:hover {
+  color: var(--text);
+  border-color: var(--hover-outline);
+}
+
+.search-close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.search-box {
+  min-height: 66px;
+}
+
+.search-status {
+  margin: 0;
+  padding: 14px 2px 2px;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+
+.pagefind-ui {
+  --pagefind-ui-scale: 0.84;
+  --pagefind-ui-primary: var(--accent-strong);
+  --pagefind-ui-text: var(--text);
+  --pagefind-ui-background: var(--paper-strong);
+  --pagefind-ui-border: var(--line-strong);
+  --pagefind-ui-tag: var(--paper-muted);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: var(--radius-sm);
+  --pagefind-ui-image-border-radius: var(--radius-sm);
+  --pagefind-ui-font: var(--sans);
+}
+
+.search-panel .pagefind-ui .pagefind-ui__form::before {
+  background-color: var(--text-muted);
+  opacity: 0.55;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-input {
+  color: var(--text);
+  background: var(--paper);
+  border-color: var(--line-strong);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0.72;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-input:focus {
+  border-color: var(--hover-outline);
+  box-shadow: none;
+  outline: none;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-clear {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__search-clear:hover {
+  color: var(--text);
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result {
+  border-top-color: var(--line);
+  padding-top: 14px;
+  padding-bottom: 16px;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-title {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-title .pagefind-ui__result-link {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-title .pagefind-ui__result-link:hover {
+  color: var(--accent-strong);
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-excerpt,
+.search-panel .pagefind-ui .pagefind-ui__message {
+  color: var(--text-soft);
+  font-size: 0.84rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__message {
+  height: auto;
+  padding: 12px 0;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__results-area {
+  margin-top: 10px;
+  min-width: 0;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-inner {
+  min-width: 0;
+  margin-top: 0;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-excerpt {
+  min-width: 0;
+  margin-top: 3px;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__result-nested {
+  padding-left: 14px;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__button {
+  height: 36px;
+  margin-top: 14px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.search-panel .pagefind-ui .pagefind-ui__button:hover {
+  border-color: var(--hover-outline);
+}
+
+.search-panel .pagefind-ui mark {
+  color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent-soft) 74%, transparent);
+  border-radius: 4px;
 }
 
 .page-grid {
@@ -2462,6 +2695,10 @@ button.submenu-link {
     z-index: 110;
   }
 
+  .search-toggle {
+    order: 0;
+  }
+
   .theme-toggle {
     order: 1;
   }
@@ -2477,6 +2714,16 @@ button.submenu-link {
   .nav-toggle span {
     width: 15px;
     height: 2px;
+  }
+
+  .search-dialog {
+    padding: 70px 12px 16px;
+  }
+
+  .search-panel {
+    width: calc(100vw - 24px);
+    max-height: calc(100vh - 86px);
+    padding: 12px;
   }
 
   .site-header[data-nav-open="true"] .nav-toggle span:nth-child(1) {

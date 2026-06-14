@@ -31,7 +31,7 @@ const readingStats = getReadingStats(post);
   publishedTime={post.data.date}
 >
   <article class="container article-layout">
-    <div class="article-main">
+    <div class="article-main" data-pagefind-body>
       <header class="article-header">
         <h1>{post.data.title}</h1>
         <PostMeta date={post.data.date} categories={post.data.categories} tags={post.data.tags} readingStats={readingStats} />
@@ -40,7 +40,7 @@ const readingStats = getReadingStats(post);
         <Content />
       </div>
     </div>
-    <aside class="article-aside">
+    <aside class="article-aside" data-pagefind-ignore>
       <TableOfContents headings={headings} />
     </aside>
   </article>

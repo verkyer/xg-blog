@@ -1,0 +1,149 @@
+<div class="search-dialog" data-search-dialog hidden>
+  <button class="search-backdrop" type="button" aria-label="关闭搜索" data-search-close></button>
+  <section class="search-panel" role="dialog" aria-modal="true" aria-labelledby="site-search-title">
+    <header class="search-panel-header">
+      <h2 id="site-search-title">搜索文章</h2>
+      <button class="search-close" type="button" aria-label="关闭搜索" data-search-close>
+        <svg viewBox="0 0 18 18" aria-hidden="true">
+          <path d="M5 5l8 8M13 5l-8 8" />
+        </svg>
+      </button>
+    </header>
+    <div id="pagefind-search" class="search-box" data-pagefind-search></div>
+    <p class="search-status" data-search-status hidden>搜索索引需构建后使用</p>
+  </section>
+</div>
+
+<script>
+  const searchDialog = document.querySelector<HTMLElement>('[data-search-dialog]');
+  const searchRoot = document.querySelector<HTMLElement>('[data-pagefind-search]');
+  const searchStatus = document.querySelector<HTMLElement>('[data-search-status]');
+  const searchOpenButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-search-open]'));
+  const searchCloseButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-search-close]'));
+
+  let searchReady = false;
+  let searchLoading: Promise<boolean> | undefined;
+
+  type PagefindWindow = Window & {
+    PagefindUI?: new (options: Record<string, unknown>) => unknown;
+  };
+
+  function setSearchStatus(message: string) {
+    if (!searchStatus) return;
+    searchStatus.textContent = message;
+    searchStatus.hidden = false;
+  }
+
+  function loadScript(src: string) {
+    return new Promise<boolean>((resolve) => {
+      const existing = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+
+      if (existing) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.defer = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.head.append(script);
+    });
+  }
+
+  async function loadSearch() {
+    if (searchReady) return true;
+
+    if (!searchLoading) {
+      searchLoading = (async () => {
+        const stylesheetHref = '/pagefind/pagefind-ui.css';
+        const hasStylesheet = document.querySelector(`link[href="${stylesheetHref}"]`);
+
+        if (!hasStylesheet) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = stylesheetHref;
+          document.head.append(link);
+        }
+
+        const loaded = await loadScript('/pagefind/pagefind-ui.js');
+        const PagefindUI = (window as PagefindWindow).PagefindUI;
+
+        if (!loaded || !PagefindUI || !searchRoot) {
+          return false;
+        }
+
+        new PagefindUI({
+          element: '#pagefind-search',
+          showImages: false,
+          showSubResults: true,
+          pageSize: 10,
+          excerptLength: 16,
+          resetStyles: false,
+          translations: {
+            placeholder: '搜索文章',
+            clear_search: '✕',
+          },
+        });
+
+        searchReady = true;
+        return true;
+      })();
+    }
+
+    return searchLoading;
+  }
+
+  function focusSearchInput() {
+    requestAnimationFrame(() => {
+      const input = searchRoot?.querySelector<HTMLInputElement>('input[type="text"], input[type="search"]');
+
+      if (input) {
+        input.placeholder = '搜索文章';
+        input.focus();
+      }
+    });
+  }
+
+  async function openSearch() {
+    if (!searchDialog) return;
+    searchDialog.hidden = false;
+    document.documentElement.setAttribute('data-search-open', 'true');
+    searchStatus?.setAttribute('hidden', '');
+
+    const loaded = await loadSearch();
+
+    if (loaded) {
+      focusSearchInput();
+    } else {
+      setSearchStatus('搜索索引需构建后使用');
+    }
+  }
+
+  function closeSearch() {
+    if (!searchDialog || searchDialog.hidden) return;
+    searchDialog.hidden = true;
+    document.documentElement.removeAttribute('data-search-open');
+  }
+
+  searchOpenButtons.forEach((button) => {
+    button.addEventListener('click', openSearch);
+  });
+
+  searchCloseButtons.forEach((button) => {
+    button.addEventListener('click', closeSearch);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeSearch();
+      return;
+    }
+
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      openSearch();
+    }
+  });
+</script>
