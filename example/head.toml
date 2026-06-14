@@ -1,0 +1,14 @@
+# Head 注入模板。复制为 blog/head.toml 后生效；示例文件不会自动注入到页面。
+# 在 ''' ... ''' 内填入需要注入的内容，例如网站统计等。
+
+[[head]]
+html = '''
+<script>
+  console.log('欢迎使用 XG-Blog ！');
+</script>
+'''
+
+[[head]]
+html = '''
+<script defer src="https://umami.example.com/script.js" data-website-id="00000000-0000-0000-0000-000000000000"></script>
+'''

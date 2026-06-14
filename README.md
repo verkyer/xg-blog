@@ -30,7 +30,8 @@
 │  ├─ categories.toml            # 分类配置，从 `example/categories.toml` 复制修改
 │  ├─ tags.toml                  # 自定义标签，从 `example/tags.toml` 复制修改
 │  ├─ links.toml                 # 友情链接，从 `example/links.toml` 复制修改
-│  └─ banner.toml                # banner 配置，从 `example/banner.toml` 复制修改
+│  ├─ banner.toml                # banner 配置，从 `example/banner.toml` 复制修改
+│  └─ head.toml                  # 全站 head 注入，从 `example/head.toml` 复制修改
 ├─ example/                      # 模板目录「空内容时的兜底示例」
 │  ├─ posts/hello-world/
 │  ├─ pages/demo-page/
@@ -39,7 +40,8 @@
 │  ├─ categories.toml
 │  ├─ tags.toml
 │  ├─ links.toml
-│  └─ banner.toml
+│  ├─ banner.toml
+│  └─ head.toml
 ├─ defaults/public/              # 程序缺省公开资源，不是用户内容模板
 │  ├─ favicon.ico
 │  └─ default/
@@ -78,8 +80,9 @@
 |`blog/tags.toml`|标签显示名|从 `example/tags.toml` 复制后修改；不存在时使用示例文件|
 |`blog/links.toml`|友链数据|从 `example/links.toml` 复制后修改；不存在时使用示例文件|
 |`blog/banner.toml`|首页 banner|从 `example/banner.toml` 复制后修改；不存在时使用示例文件|
+|`blog/head.toml`|全站 `<head>` 注入|从 `example/head.toml` 复制后修改；不存在时不注入任何内容|
 
-`blog/\*.toml` 只要存在，就会完全替换 `example/\*.toml`。分类和标签会先从文章属性区自动收集；TOML 主要用于改显示名称和描述。
+除 `blog/head.toml` 外，`blog/\*.toml` 只要存在，就会完全替换 `example/\*.toml`。分类和标签会先从文章属性区自动收集；TOML 主要用于改显示名称和描述。
 
 首页 banner 使用 `\[\[banner]]` 数组，图片建议放在 `blog/public/`，配置构建后的根路径：
 
@@ -87,6 +90,24 @@
 \[\[banner]]
 image = "/assets/banner.webp"
 href = "/"
+```
+
+全站 head 注入使用 `\[\[head]]` 数组，适合放 Google 站点统计、Umami、站点验证标签等可信代码。`example/head.toml` 只作为模板，不会自动注入页面；需要启用时复制为 `blog/head.toml`。
+
+`html` 必须写成 TOML 字符串，不能使用 Markdown 代码围栏。多行 HTML 推荐使用三引号单引号字符串，这样 HTML 属性里的双引号不需要转义：
+
+```toml
+[[head]]
+html = '''
+<script>
+  console.log('欢迎使用 XG-Blog ！');
+</script>
+'''
+
+[[head]]
+html = '''
+<script defer src="https://umami.example.com/script.js" data-website-id="00000000-0000-0000-0000-000000000000"></script>
+'''
 ```
 
 ## 示例内容
@@ -236,4 +257,3 @@ npm.cmd run build
 文章 frontmatter 中的 `categories` 和 `tags` 建议统一写成带引号字符串，例如 `- "website"`、`- "astro"`，可避免纯数字 slug 被 YAML 解析成 number。
 
 构建成功后，空用户内容会看到示例文章和示例页面；添加自己的文章或页面后，对应示例会自动消失。
-

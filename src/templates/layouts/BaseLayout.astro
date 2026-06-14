@@ -3,6 +3,7 @@ import SeoHead from '../components/SeoHead.astro';
 import SearchDialog from '../components/SearchDialog.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import { headData } from '../../features/core/data';
 import { getSite } from '../../features/core/seo';
 import globalStylesheet from '../styles/global.css?url';
 
@@ -39,6 +40,7 @@ const site = getSite();
     </script>
     <link rel="stylesheet" href={globalStylesheet} />
     <SeoHead title={title} description={description} canonical={canonical} image={image} type={type} publishedTime={publishedTime} />
+    {headData.map((html) => <Fragment set:html={html} />)}
   </head>
   <body>
     <SiteHeader currentPath={Astro.url.pathname} />

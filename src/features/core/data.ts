@@ -275,6 +275,10 @@ type BannerTomlItem = {
   href?: unknown;
 };
 
+type HeadTomlItem = {
+  html?: unknown;
+};
+
 function resolveLinkGroups(items: LinkTomlItem[]) {
   const groups = new Map<string, LinkItem[]>();
 
@@ -346,6 +350,18 @@ function resolveBannerData(): BannerItem[] {
     .filter((item): item is BannerItem => Boolean(item));
 }
 
+function resolveHeadData(): string[] {
+  const value = readTomlFile(blogDir, 'head.toml')?.head;
+
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return (value as HeadTomlItem[])
+    .map((item) => (typeof item.html === 'string' ? item.html.trim() : undefined))
+    .filter((html): html is string => Boolean(html));
+}
+
 function hasIndexMarkdown(dir: string): boolean {
   if (!existsSync(dir)) {
     return false;
@@ -399,3 +415,4 @@ export const tagData = readTomlArray<TaxonomyItem>('tags.toml', 'tags');
 export const menuData = resolveMenuData();
 export const linkData = resolveLinkGroups(readTomlArray<LinkTomlItem>('links.toml', 'links'));
 export const bannerData = resolveBannerData();
+export const headData = resolveHeadData();

@@ -2,19 +2,18 @@
 import { getSite } from '../../features/core/seo';
 
 const site = getSite();
-const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="container footer-inner">
     <p class="footer-copyright">
-      © {year} {site.title} |
+      © {site.title} ·
       <a
         href="https://github.com/verkyer/xg-blog"
         target="_blank"
         rel="noopener noreferrer"
       >
-        XG-Blog
+        XG-Blog v0.1.0
       </a>
     </p>
     <p class="footer-links">
