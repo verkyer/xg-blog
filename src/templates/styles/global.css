@@ -1845,7 +1845,9 @@ button.submenu-link {
 
 .prose table {
   display: block;
+  margin: 18px 0 14px;
   width: max-content;
+  min-width: 100%;
   max-width: 100%;
   overflow-x: auto;
   border-collapse: collapse;
@@ -1858,6 +1860,7 @@ button.submenu-link {
   padding: 9px 11px;
   border: 1px solid var(--line);
   vertical-align: top;
+  line-height: 1.6;
 }
 
 .prose th {
@@ -1866,8 +1869,23 @@ button.submenu-link {
   font-weight: 760;
 }
 
+.prose tbody tr > :first-child {
+  color: var(--text);
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--paper-muted) 68%, transparent);
+}
+
 .prose tr:nth-child(even) td {
   background: color-mix(in srgb, var(--paper-muted) 42%, transparent);
+}
+
+.prose tbody tr:nth-child(even) > :first-child {
+  background: color-mix(in srgb, var(--paper-muted) 82%, transparent);
+}
+
+.prose td.is-merged-cell {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .prose hr {
@@ -2604,6 +2622,16 @@ button.submenu-link {
   .prose img,
   .prose blockquote {
     margin-block: 20px;
+  }
+
+  .prose table {
+    font-size: 0.95rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 8px 10px;
+    line-height: 1.55;
   }
 
   .taxonomy-grid {

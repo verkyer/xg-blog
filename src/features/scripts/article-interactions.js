@@ -542,6 +542,54 @@ function initImageZoom() {
   });
 }
 
+function initTableMerge() {
+  const tables = document.querySelectorAll('.prose table');
+
+  const getMergeKey = (cell) => cell.innerHTML.replace(/\s+/g, ' ').trim();
+
+  for (const table of tables) {
+    if (table.dataset.xgTableMerged === 'true') {
+      continue;
+    }
+
+    const rows = table.querySelectorAll('tbody tr');
+
+    for (const row of rows) {
+      const cells = Array.from(row.children).filter((cell) => cell.tagName === 'TD' || cell.tagName === 'TH');
+
+      if (cells.length < 3) {
+        continue;
+      }
+
+      let previousCell = null;
+      let previousKey = '';
+
+      for (const cell of cells.slice(1)) {
+        const key = getMergeKey(cell);
+
+        if (!key) {
+          previousCell = null;
+          previousKey = '';
+          continue;
+        }
+
+        if (previousCell && key === previousKey) {
+          previousCell.colSpan += cell.colSpan || 1;
+          previousCell.classList.add('is-merged-cell');
+          cell.remove();
+          continue;
+        }
+
+        previousCell = cell;
+        previousKey = key;
+      }
+    }
+
+    table.dataset.xgTableMerged = 'true';
+  }
+}
+
 initTocActive();
 initCodeCopy();
+initTableMerge();
 initImageZoom();
