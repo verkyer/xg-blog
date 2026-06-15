@@ -1,5 +1,5 @@
 ---
-title: "XG-Blo 基础食用方法"
+title: "XG-Blog 基础食用方法"
 slug: "how-to-use"
 description: "XG-Blog 的基本使用流程。"
 date: "2026-06-10"
