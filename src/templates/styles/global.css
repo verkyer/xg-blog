@@ -1871,7 +1871,6 @@ pagefind-modal[data-pf-theme="dark"] {
   max-width: 100%;
   overflow-x: auto;
   border-collapse: collapse;
-  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
 

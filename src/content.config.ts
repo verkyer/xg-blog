@@ -1,13 +1,30 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { readdirSync } from 'node:fs';
 
 const normalizeSlug = (value: string) => value.trim().toLowerCase();
 const contentEntryId = ({ entry }: { entry: string }) =>
   entry.replace(/\\/g, '/').replace(/\/index(?:\.md)?$/, '').replace(/\.md$/, '');
 
+function hasUserContent(collection: 'posts' | 'pages') {
+  try {
+    return readdirSync(`blog/${collection}`, { withFileTypes: true }).some((entry) => entry.isDirectory());
+  } catch {
+    return false;
+  }
+}
+
+const postPatterns = hasUserContent('posts')
+  ? ['blog/posts/**/index.md']
+  : ['blog/posts/**/index.md', 'example/posts/**/index.md'];
+
+const pagePatterns = hasUserContent('pages')
+  ? ['blog/pages/*/index.md']
+  : ['blog/pages/*/index.md', 'example/pages/*/index.md'];
+
 const posts = defineCollection({
   loader: glob({
-    pattern: ['blog/posts/**/index.md', 'example/posts/**/index.md'],
+    pattern: postPatterns,
     base: './',
     generateId: contentEntryId,
   }),
@@ -26,7 +43,7 @@ const posts = defineCollection({
 
 const pages = defineCollection({
   loader: glob({
-    pattern: ['blog/pages/*/index.md', 'example/pages/*/index.md'],
+    pattern: pagePatterns,
     base: './',
     generateId: contentEntryId,
   }),
