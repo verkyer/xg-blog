@@ -1,20 +1,25 @@
 # XG-Blog
 
-🎉 XG-Blog 是一个基于 Astro 的静态博客程序。
+🎉 XG-Blog 是一个基于 Astro 的静态博客程序。✍️ 你只需专注写文章「Markdown」，其余的由程序构建生成 ~
 
-✍️ 你只需专注写文章「Markdown」，其余的由程序构建生成 ~
+![HOME](demo.webp)
+
+Fork 之后，只需编辑 `blog/` 与 `.env` 文件，即可快速搭建博客，一键部署到 Cloudflare Pages/Workers 等平台！🚀
 
 ## 特性一览✨
 
-* 📝 使用 Markdown 写作，轻松上手～
-* 🏷️ 文章分类 + 标签，内容井井有条
-* 🔍 站内全文搜索（基于 `Pagefind`，按需加载）
-* 🧭 Banner、菜单等配置自由定制
-* 🔗 友情链接轻松管理
-* 📡 RSS、sitemap 等功能一应俱全
-* 📄 自定义页面，拓展无限可能
-* 🌗 深色 / 浅色主题一键切换
-* 🎨 主题色可自定义，色彩随心
+- [x] 📝 使用 Markdown 写作，轻松上手～
+- [x] 🏷️ 文章分类 + 标签，内容井井有条
+- [x] 🔍 站内全文搜索（基于 `Pagefind`，按需加载）
+- [x] 🧭 Banner、菜单等配置自由定制
+- [x] 🔗 友情链接轻松管理
+- [x] 📡 RSS、sitemap 等功能一应俱全
+- [x] 📄 自定义页面，拓展无限可能
+- [x] 💻 代码块高亮显示、复制按钮
+- [x] 🌗 深色 / 浅色主题一键切换
+- [x] 🎨 主题色可自定义，色彩随心
+- [ ] 📃 可视化编辑器（计划中）
+- [ ] 🗨️ 评论系统（已留字段，暂不做开发） 
 
 ## 目录结构
 
@@ -63,6 +68,8 @@
 
 ## 配置顺序
 
+### a.站点基础信息
+
 站点基础信息来自环境变量：
 
 1. 部署平台或系统环境变量优先。
@@ -84,6 +91,10 @@
 
 除 `blog/head.toml` 外，`blog/*.toml` 只要存在，就会完全替换 `example/*.toml`。分类和标签会先从文章属性区自动收集；TOML 主要用于改显示名称和描述。
 
+---
+
+### b.站点 Banner
+
 首页 banner 使用 `[[banner]]` 数组，图片建议放在 `blog/public/`，配置构建后的根路径：
 
 ```toml
@@ -91,6 +102,10 @@
 image = "/assets/banner.webp"
 href = "/"
 ```
+
+---
+
+### c.站点 head 注入
 
 全站 head 注入使用 `[[head]]` 数组，适合放 Google 站点统计、Umami、站点验证标签等可信代码。`example/head.toml` 只作为模板，不会自动注入页面；需要启用时复制为 `blog/head.toml`。
 
@@ -218,6 +233,10 @@ comments: false
 
 如果存在 `blog/public/favicon.ico`、`favicon.svg`、`favicon.png` 或 `favicon.webp`，构建时不会输出缺省 `/favicon.ico`，页面会引用用户自己的 favicon。
 
+---
+
+## 缺省资源
+
 缺省资源位于 `defaults/public/`，构建后路径如下：
 
 |文件位置|使用路径|
@@ -261,3 +280,7 @@ npm run build
 ## 支持
 
 ![QR](donation-qr-code.webp)
+
+## 许可证
+
+[MIT](LICENSE) © 2026-2026 XG-Blog
