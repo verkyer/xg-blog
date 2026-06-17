@@ -258,6 +258,8 @@ comments: false
 |`BLOG_SUBTITLE`|`记录与分享~ 使用纯静态 XG-Blog！`|站点副标题|
 |`BLOG_DESCRIPTION`|`这里填写站点描述，用于首页和 SEO。`|SEO 描述|
 |`BLOG_URL`|`https://example.com`|正式站点 URL；影响 sitemap、RSS、robots|
+|`BEIAN`|未配置时不显示|页脚备案号；填写后显示在站点名和版本号之间|
+|`BEIAN_URL`|填写 `BEIAN` 但未设置本项时为 `http://beian.miit.gov.cn/`|备案号链接地址|
 |`BLOG_LOGO`|先匹配 `/logo.*`，否则 `/default/default-logo.svg`|logo 路径|
 |`BLOG_LOGO_DARK`|先匹配 `/logo-dark.*`，否则 `/default/default-logo-dark.svg`|深色模式 logo 路径|
 |`BLOG_SHOW_TITLE`|`false`|是否显示站点标题；设置为 `true` 开启|

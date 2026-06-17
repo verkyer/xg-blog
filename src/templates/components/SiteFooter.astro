@@ -2,19 +2,23 @@
 import { getSite } from '../../features/core/seo';
 
 const site = getSite();
+const beian = site.beian;
+const beianUrl = site.beianUrl;
+const xgBlogVersion = 'XG-Blog v0.2.0';
 ---
 
 <footer class="site-footer">
   <div class="container footer-inner">
     <p class="footer-copyright">
-      © {site.title} ·
-      <a
-        href="https://github.com/verkyer/xg-blog"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        XG-Blog v0.1.0
-      </a>
+      &copy; {site.title}
+      {beian && (
+        <>
+          {' / '}
+          <a href={beianUrl} target="_blank" rel="noopener noreferrer">
+            {beian}
+          </a>
+        </>
+      )}
     </p>
     <p class="footer-links">
       <a href="/rss.xml">
@@ -25,7 +29,7 @@ const site = getSite();
         </svg>
         RSS
       </a>
-      <span aria-hidden="true">·</span>
+      <span aria-hidden="true">/</span>
       <a href="/sitemap.xml">
         <svg viewBox="0 0 18 18" aria-hidden="true">
           <path d="M9 4v4" />
@@ -35,6 +39,16 @@ const site = getSite();
           <rect x="10.5" y="10.5" width="5" height="4" rx="1" />
         </svg>
         Sitemap
+      </a>
+      <span aria-hidden="true">/</span>
+      <a
+        href="https://github.com/verkyer/xg-blog"
+        target="_blank"
+        rel="noopener noreferrer"
+        title={xgBlogVersion}
+        aria-label={xgBlogVersion}
+      >
+        @ XG-Blog
       </a>
     </p>
   </div>

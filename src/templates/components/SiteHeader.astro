@@ -89,6 +89,38 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
           </div>
         );
       })}
+      <div class="mobile-nav-links" aria-label="站点工具">
+        <a href="/rss.xml" class="mobile-nav-link">
+          <svg viewBox="0 0 18 18" aria-hidden="true">
+            <path d="M4 4c5.5 0 10 4.5 10 10" />
+            <path d="M4 8c3.3 0 6 2.7 6 6" />
+            <circle cx="5" cy="13" r="1.2" />
+          </svg>
+          RSS
+        </a>
+        <span aria-hidden="true">/</span>
+        <a href="/sitemap.xml" class="mobile-nav-link">
+          <svg viewBox="0 0 18 18" aria-hidden="true">
+            <path d="M9 4v4" />
+            <path d="M5 10h8" />
+            <rect x="6.5" y="2.5" width="5" height="3.5" rx="1" />
+            <rect x="2.5" y="10.5" width="5" height="4" rx="1" />
+            <rect x="10.5" y="10.5" width="5" height="4" rx="1" />
+          </svg>
+          Sitemap
+        </a>
+        <span aria-hidden="true">/</span>
+        <a
+          href="https://github.com/verkyer/xg-blog"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="XG-Blog v0.2.0"
+          aria-label="XG-Blog v0.2.0"
+          class="mobile-nav-link"
+        >
+          @ XG-Blog
+        </a>
+      </div>
     </nav>
     <div class="header-actions">
       <button class="search-toggle" type="button" aria-label="搜索文章" title="搜索文章" data-search-open>

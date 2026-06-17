@@ -65,6 +65,8 @@ export type SiteData = {
   subtitle: string;
   description: string;
   url: string;
+  beian?: string;
+  beianUrl?: string;
   favicon: string;
   logo: string;
   darkLogo: string;
@@ -226,6 +228,11 @@ function resolveSiteUrl(configured: string | null | undefined) {
   return trimmed || 'https://example.com';
 }
 
+function resolveBeianUrl(configured: string | null | undefined) {
+  const trimmed = configured?.trim();
+  return trimmed || 'http://beian.miit.gov.cn/';
+}
+
 function resolveFavicon() {
   return findUserFavicon() ?? '/favicon.ico';
 }
@@ -244,12 +251,15 @@ function resolveSiteData(): SiteData {
   const logoData = resolveSiteLogo(readEnv('BLOG_LOGO'));
   const logo = logoData.logo;
   const darkLogo = resolveSiteDarkLogo(readEnv('BLOG_LOGO_DARK'), logo, logoData.custom);
+  const beian = readEnv('BEIAN');
 
   return {
     title: readEnv('BLOG_TITLE') ?? 'XG-Blog',
     subtitle: readEnv('BLOG_SUBTITLE') ?? '记录与分享~ 使用纯静态 XG-Blog！',
     description: readEnv('BLOG_DESCRIPTION') ?? '这里填写站点描述，用于首页和 SEO。',
     url: resolveSiteUrl(readEnv('BLOG_URL')),
+    beian,
+    beianUrl: beian ? resolveBeianUrl(readEnv('BEIAN_URL')) : undefined,
     favicon: resolveFavicon(),
     logo,
     darkLogo,
