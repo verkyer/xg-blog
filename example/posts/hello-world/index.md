@@ -11,7 +11,7 @@ tags:
   - "static-blog"
 cover: "./img/cover.webp"
 top: 1
-comments: false
+comments: true
 ---
 
 ## 欢迎使用 XG-Blog

@@ -2,7 +2,7 @@
 title: "示例页面"
 description: "一个用于验证自定义页面结构、正文样式和图片引用的示例页面。"
 date: "2026-06-09"
-comments: false
+comments: true
 ---
 
 这是一个自定义页面示例，用来确认 `blog/pages/{slug}/index.md` 的目录结构、页面属性区和正文图片都能正常工作。

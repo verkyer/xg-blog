@@ -164,7 +164,7 @@ tags:
   - "markdown"
 cover: "./img/cover.webp"
 top: 0
-comments: false
+comments: true
 ---
 
 这里写文章正文第一段，说明这篇文章要记录的内容。
@@ -175,6 +175,8 @@ comments: false
 
 ![文章配图](./img/post-slug-1.webp)
 ```
+
+`comments` 字段默认按开启处理，建议显式写 `comments: true`，方便后续接入评论系统；只有写 `comments: false` 时才关闭评论。
 
 封面读取顺序：
 
@@ -203,7 +205,7 @@ blog/pages/
 title: "关于"
 description: "关于这个站点和内容方向。"
 date: "2026-06-09"
-comments: false
+comments: true
 ---
 
 这里写页面正文。页面正文同样支持 Markdown。
@@ -214,6 +216,8 @@ comments: false
 
 ![页面配图](./img/about-1.webp)
 ```
+
+页面也沿用同样的评论规则：`comments` 默认开启，省略该字段时仍视为开启，只有显式写 `comments: false` 时才关闭。
 
 页面不要写 `slug`、`categories`、`tags`、`cover`、`top`，这些字段只属于文章。
 

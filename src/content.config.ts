@@ -37,7 +37,7 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]).transform((items) => items.map(normalizeSlug)),
     cover: z.string().optional(),
     top: z.number().optional().default(0),
-    comments: z.boolean().optional().default(false),
+    comments: z.boolean().optional().default(true),
   }),
 });
 
@@ -51,7 +51,7 @@ const pages = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    comments: z.boolean().optional().default(false),
+    comments: z.boolean().optional().default(true),
   }),
 });
 
