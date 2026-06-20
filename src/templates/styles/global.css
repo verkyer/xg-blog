@@ -1937,6 +1937,79 @@ pagefind-modal[data-pf-theme="dark"] {
   cursor: zoom-in;
 }
 
+.comments-panel {
+  margin-top: 34px;
+  padding: 26px 6px 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.comments-head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.comments-head h2 {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 1.24rem;
+  font-weight: 780;
+  line-height: 1.25;
+}
+
+.comments-head h2::after {
+  content: "";
+  width: var(--marker-width);
+  height: 2px;
+  background: color-mix(in srgb, var(--accent) 58%, var(--line));
+  border-radius: 999px;
+}
+
+.twikoo-root {
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+.twikoo-root :where(.tk-meta-input, .el-input__inner, .el-textarea__inner, input, textarea) {
+  color: var(--text);
+  background: var(--paper);
+  border-color: var(--line-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+.twikoo-root :where(.tk-meta-input, .el-input__inner, .el-textarea__inner, input, textarea):focus {
+  border-color: var(--accent);
+}
+
+.twikoo-root :where(.tk-comment, .tk-submit, .tk-preview-container) {
+  color: var(--text);
+}
+
+.twikoo-root :where(.tk-nick, .tk-action-link, .tk-comments-title) {
+  color: var(--text);
+}
+
+.twikoo-root :where(.tk-time, .tk-tag, .tk-extra, .tk-footer, .tk-actions, .tk-icon) {
+  color: var(--text-muted);
+}
+
+.twikoo-root :where(.tk-content, .tk-preview) {
+  color: var(--text-soft);
+}
+
+.twikoo-root :where(.el-button, button) {
+  border-radius: var(--radius-sm);
+}
+
+.twikoo-root :where(.el-button--primary) {
+  background: var(--text);
+  border-color: var(--text);
+}
+
 .xg-lightbox {
   position: fixed;
   inset: 0;
@@ -2678,6 +2751,11 @@ pagefind-modal[data-pf-theme="dark"] {
   .prose {
     margin-top: 20px;
     padding-inline: 8px;
+  }
+
+  .comments-panel {
+    margin-top: 28px;
+    padding: 22px 8px 0;
   }
 
   .prose pre,

@@ -1,0 +1,63 @@
+---
+interface Props {
+  enabled?: boolean;
+  path: string;
+}
+
+const { enabled = true, path } = Astro.props;
+const twikooEnvId = import.meta.env.TWIKOO_ENV_ID?.trim();
+const twikooScriptUrl = import.meta.env.TWIKOO_JS_URL?.trim() || 'https://cdn.jsdelivr.net/npm/twikoo@1.7.12/dist/twikoo.min.js';
+const commentsPath = path || Astro.url.pathname;
+const shouldRender = enabled && Boolean(twikooEnvId);
+---
+
+{shouldRender && (
+  <>
+    <section class="comments-panel" aria-labelledby="comments-title" data-pagefind-ignore>
+      <div class="comments-head">
+        <h2 id="comments-title">评论</h2>
+      </div>
+      <div id="tcomment" class="twikoo-root"></div>
+    </section>
+    <script is:inline define:vars={{ twikooEnvId, commentsPath, twikooScriptUrl }}>
+      (() => {
+        const container = document.querySelector('#tcomment');
+
+        if (!container || !twikooEnvId) {
+          return;
+        }
+
+        const initTwikoo = () => {
+          if (!window.twikoo) {
+            return;
+          }
+
+          window.twikoo.init({
+            envId: twikooEnvId,
+            el: '#tcomment',
+            path: commentsPath,
+          });
+        };
+
+        if (window.twikoo) {
+          initTwikoo();
+          return;
+        }
+
+        const existingScript = document.querySelector('script[data-twikoo-script]');
+
+        if (existingScript) {
+          existingScript.addEventListener('load', initTwikoo, { once: true });
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = twikooScriptUrl;
+        script.async = true;
+        script.dataset.twikooScript = 'true';
+        script.addEventListener('load', initTwikoo, { once: true });
+        document.head.append(script);
+      })();
+    </script>
+  </>
+)}

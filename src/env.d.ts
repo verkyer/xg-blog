@@ -18,6 +18,8 @@ interface ImportMetaEnv {
   readonly BLOG_BIO?: string;
   readonly BLOG_AUTHOR_DESCRIPTION?: string;
   readonly THEME_COLOR?: string;
+  readonly TWIKOO_ENV_ID?: string;
+  readonly TWIKOO_JS_URL?: string;
 }
 
 interface ImportMeta {

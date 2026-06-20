@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import ArticleInteractions from '../../templates/components/ArticleInteractions.astro';
+import Comments from '../../templates/components/Comments.astro';
 import PostMeta from '../../templates/components/PostMeta.astro';
 import TableOfContents from '../../templates/components/TableOfContents.astro';
 import BaseLayout from '../../templates/layouts/BaseLayout.astro';
@@ -39,6 +40,7 @@ const readingStats = getReadingStats(post);
       <div class="prose">
         <Content />
       </div>
+      <Comments enabled={post.data.comments} path={getPostPath(post)} />
     </div>
     <aside class="article-aside" data-pagefind-ignore>
       <TableOfContents headings={headings} />

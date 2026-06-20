@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import { getAllPages, getPageSlug } from '../features/core/pages';
 import ArticleInteractions from '../templates/components/ArticleInteractions.astro';
+import Comments from '../templates/components/Comments.astro';
 import TableOfContents from '../templates/components/TableOfContents.astro';
 import BaseLayout from '../templates/layouts/BaseLayout.astro';
 
@@ -27,6 +28,7 @@ const { Content, headings } = await render(page);
       <div class="prose">
         <Content />
       </div>
+      <Comments enabled={page.data.comments} path={`/${slug}`} />
     </div>
     <aside class="article-aside">
       <TableOfContents headings={headings} />
