@@ -298,8 +298,8 @@ comments: false
 |-|-|-|
 |`BLOG_TITLE`|`XG-Blog`|站点标题|
 |`BLOG_SUBTITLE`|`记录与分享~ 使用纯静态 XG-Blog！`|站点副标题|
-|`BLOG_DESCRIPTION`|`这里填写站点描述，用于首页和 SEO。`|SEO 描述|
-|`BLOG_KEYWORDS`|未配置|SEO 关键词；非空时生成 `meta name="keywords"`|
+|`SEO_DESCRIPTION`|`这里填写站点描述，用于首页和 SEO。`|SEO 描述|
+|`SEO_KEYWORDS`|未配置|SEO 关键词；非空时生成 `meta name="keywords"`|
 |`BLOG_URL`|`https://example.com`|正式站点 URL；影响 sitemap、RSS、robots|
 |`BEIAN`|未配置时不显示|页脚备案号；填写后显示在站点名和版本号之间|
 |`BEIAN_URL`|填写 `BEIAN` 但未设置本项时为 `http://beian.miit.gov.cn/`|备案号链接地址|
