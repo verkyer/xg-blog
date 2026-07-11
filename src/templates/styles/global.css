@@ -2182,6 +2182,7 @@ pagefind-modal[data-pf-theme="dark"] {
 }
 
 .xg-lightbox img.xg-lightbox-transition-image {
+  z-index: 2;
   pointer-events: none;
 }
 

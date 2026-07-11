@@ -205,7 +205,10 @@ function initImageZoom() {
   let wheelGestureActive = false;
   let wheelGestureTimer;
   let transitioning = false;
-  const maxScale = 3;
+  let pinchDistance = 0;
+  const zoomStep = 0.5;
+  const maxScale = 2.5;
+  const pinchThreshold = 12;
 
   const lightbox = document.createElement('div');
   lightbox.className = 'xg-lightbox';
@@ -426,15 +429,20 @@ function initImageZoom() {
 
     transitioning = true;
     const direction = step > 0 ? 1 : -1;
+    const outgoingRect = preview.getBoundingClientRect();
     const outgoing = preview.cloneNode();
-    const outgoingTransform = preview.style.transform;
-    const outgoingTranslateX = translateX;
-    const outgoingTranslateY = translateY;
-    const outgoingScale = scale;
 
     outgoing.classList.add('xg-lightbox-transition-image');
     outgoing.setAttribute('aria-hidden', 'true');
-    stage.append(outgoing);
+    Object.assign(outgoing.style, {
+      position: 'fixed',
+      top: `${outgoingRect.top}px`,
+      left: `${outgoingRect.left}px`,
+      width: `${outgoingRect.width}px`,
+      height: `${outgoingRect.height}px`,
+      transform: 'translateX(0)',
+    });
+    lightbox.append(outgoing);
     preview.style.visibility = 'hidden';
     activeIndex = (activeIndex + step + images.length) % images.length;
     render(() => {
@@ -443,15 +451,14 @@ function initImageZoom() {
       const animationOptions = {
         duration: 240,
         easing: 'cubic-bezier(0.22, 0.76, 0.24, 1)',
+        fill: 'both',
       };
 
       preview.style.visibility = '';
       const outgoingAnimation = outgoing.animate(
         [
-          { transform: outgoingTransform },
-          {
-            transform: `translate(calc(-50% + ${outgoingTranslateX - offset}px), calc(-50% + ${outgoingTranslateY}px)) scale(${outgoingScale})`,
-          },
+          { transform: 'translateX(0)' },
+          { transform: `translateX(${-offset}px)` },
         ],
         animationOptions,
       );
@@ -485,7 +492,53 @@ function initImageZoom() {
     }
 
     wheelGestureActive = true;
-    setScale(scale + (event.deltaY < 0 ? 0.5 : -0.5));
+    setScale(scale + (event.deltaY < 0 ? zoomStep : -zoomStep));
+  };
+
+  const getTouchDistance = (touches) => {
+    const [first, second] = Array.from(touches);
+
+    return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
+  };
+
+  const startPinch = (event) => {
+    if (event.touches.length !== 2) {
+      return;
+    }
+
+    event.preventDefault();
+    dragState = null;
+    stage.classList.remove('is-dragging');
+    pinchDistance = getTouchDistance(event.touches);
+    suppressBackdropClick = true;
+  };
+
+  const pinch = (event) => {
+    if (event.touches.length !== 2 || pinchDistance === 0) {
+      return;
+    }
+
+    event.preventDefault();
+    const nextDistance = getTouchDistance(event.touches);
+    const distanceChange = nextDistance - pinchDistance;
+
+    if (Math.abs(distanceChange) < pinchThreshold) {
+      return;
+    }
+
+    setScale(scale + (distanceChange > 0 ? zoomStep : -zoomStep));
+    pinchDistance = nextDistance;
+  };
+
+  const endPinch = (event) => {
+    if (event.touches.length >= 2) {
+      return;
+    }
+
+    pinchDistance = 0;
+    window.setTimeout(() => {
+      suppressBackdropClick = false;
+    }, 0);
   };
 
   const getDownloadName = () => {
@@ -593,14 +646,18 @@ function initImageZoom() {
   nextButton.addEventListener('click', () => move(1));
   actualButton.addEventListener('click', showActualSize);
   fitButton.addEventListener('click', fitToPage);
-  zoomOutButton.addEventListener('click', () => setScale(scale - 0.5));
-  zoomInButton.addEventListener('click', () => setScale(scale + 0.5));
+  zoomOutButton.addEventListener('click', () => setScale(scale - zoomStep));
+  zoomInButton.addEventListener('click', () => setScale(scale + zoomStep));
   downloadButton.addEventListener('click', downloadCurrent);
   stage.addEventListener('pointerdown', startDrag);
   stage.addEventListener('pointermove', drag);
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', endDrag);
   lightbox.addEventListener('wheel', zoomWithWheel, { passive: false });
+  lightbox.addEventListener('touchstart', startPinch, { passive: false });
+  lightbox.addEventListener('touchmove', pinch, { passive: false });
+  lightbox.addEventListener('touchend', endPinch);
+  lightbox.addEventListener('touchcancel', endPinch);
 
   lightbox.addEventListener('click', (event) => {
     if (event.target === lightbox && !suppressBackdropClick) {
