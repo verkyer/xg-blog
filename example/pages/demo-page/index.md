@@ -25,3 +25,25 @@ comments: true
 | 模板位置 | `example/pages/demo-page/index.md` |
 | 用户页面位置 | `blog/pages/{slug}/index.md` |
 | 图片路径 | `./img/demo-page-1.webp` |
+
+## 代码示例
+
+```
+function hello() {
+  return 'Hello World';
+}
+console.log(hello());
+```
+
+```javascript
+// 代码块示例
+function hello() {
+  return 'Hello World';
+}
+
+const greet = (name) => {
+  console.log(`Hello, ${name}!`);
+};
+
+greet('World');
+```

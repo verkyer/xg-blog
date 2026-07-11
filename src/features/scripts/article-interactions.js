@@ -202,6 +202,10 @@ function initImageZoom() {
   let translateY = 0;
   let dragState = null;
   let suppressBackdropClick = false;
+  let wheelGestureActive = false;
+  let wheelGestureTimer;
+  let transitioning = false;
+  const maxScale = 3;
 
   const lightbox = document.createElement('div');
   lightbox.className = 'xg-lightbox';
@@ -300,9 +304,11 @@ function initImageZoom() {
 
   const updateControls = () => {
     const isAtDefault = scale <= defaultScale + 0.001;
+    const isAtMaximum = scale >= maxScale - 0.001;
     const isActual = Math.abs(scale - 1) <= 0.001;
 
     zoomOutButton.disabled = isAtDefault;
+    zoomInButton.disabled = isAtMaximum;
     actualButton.setAttribute('aria-pressed', String(isActual));
     fitButton.setAttribute('aria-pressed', String(isAtDefault));
     stage.classList.toggle('is-zoomed', !isAtDefault);
@@ -334,7 +340,7 @@ function initImageZoom() {
   };
 
   const setScale = (nextScale) => {
-    scale = Math.max(defaultScale, Math.min(4, nextScale));
+    scale = Math.max(defaultScale, Math.min(maxScale, nextScale));
     syncStageSize();
     clampTranslate();
     updateControls();
@@ -372,17 +378,29 @@ function initImageZoom() {
     updateControls();
   };
 
-  const render = () => {
+  const render = (onReady) => {
     const image = images[activeIndex];
     const label = image.alt || '正文图片';
+    let ready = false;
 
-    preview.onload = resetView;
+    const handleReady = () => {
+      if (ready) {
+        return;
+      }
+
+      ready = true;
+      preview.onload = null;
+      resetView();
+      onReady?.();
+    };
+
+    preview.onload = handleReady;
     preview.src = getCurrentImageSrc();
     preview.alt = label;
     counter.textContent = `${activeIndex + 1} / ${images.length}`;
 
     if (preview.complete && preview.naturalWidth) {
-      resetView();
+      handleReady();
     }
   };
 
@@ -397,11 +415,77 @@ function initImageZoom() {
   const close = () => {
     lightbox.classList.remove('is-open');
     document.body.style.overflow = '';
+    window.clearTimeout(wheelGestureTimer);
+    wheelGestureActive = false;
   };
 
   const move = (step) => {
+    if (transitioning || images.length < 2) {
+      return;
+    }
+
+    transitioning = true;
+    const direction = step > 0 ? 1 : -1;
+    const outgoing = preview.cloneNode();
+    const outgoingTransform = preview.style.transform;
+    const outgoingTranslateX = translateX;
+    const outgoingTranslateY = translateY;
+    const outgoingScale = scale;
+
+    outgoing.classList.add('xg-lightbox-transition-image');
+    outgoing.setAttribute('aria-hidden', 'true');
+    stage.append(outgoing);
+    preview.style.visibility = 'hidden';
     activeIndex = (activeIndex + step + images.length) % images.length;
-    render();
+    render(() => {
+      const incomingTransform = preview.style.transform;
+      const offset = direction * 72;
+      const animationOptions = {
+        duration: 240,
+        easing: 'cubic-bezier(0.22, 0.76, 0.24, 1)',
+      };
+
+      preview.style.visibility = '';
+      const outgoingAnimation = outgoing.animate(
+        [
+          { transform: outgoingTransform },
+          {
+            transform: `translate(calc(-50% + ${outgoingTranslateX - offset}px), calc(-50% + ${outgoingTranslateY}px)) scale(${outgoingScale})`,
+          },
+        ],
+        animationOptions,
+      );
+      const incomingAnimation = preview.animate(
+        [
+          {
+            transform: `translate(calc(-50% + ${offset}px), -50%) scale(${scale})`,
+          },
+          { transform: incomingTransform },
+        ],
+        animationOptions,
+      );
+
+      Promise.allSettled([outgoingAnimation.finished, incomingAnimation.finished]).then(() => {
+        outgoing.remove();
+        transitioning = false;
+      });
+    });
+  };
+
+  const zoomWithWheel = (event) => {
+    event.preventDefault();
+
+    window.clearTimeout(wheelGestureTimer);
+    wheelGestureTimer = window.setTimeout(() => {
+      wheelGestureActive = false;
+    }, 160);
+
+    if (wheelGestureActive || event.deltaY === 0) {
+      return;
+    }
+
+    wheelGestureActive = true;
+    setScale(scale + (event.deltaY < 0 ? 0.5 : -0.5));
   };
 
   const getDownloadName = () => {
@@ -509,13 +593,14 @@ function initImageZoom() {
   nextButton.addEventListener('click', () => move(1));
   actualButton.addEventListener('click', showActualSize);
   fitButton.addEventListener('click', fitToPage);
-  zoomOutButton.addEventListener('click', () => setScale(scale / 1.25));
-  zoomInButton.addEventListener('click', () => setScale(scale * 1.25));
+  zoomOutButton.addEventListener('click', () => setScale(scale - 0.5));
+  zoomInButton.addEventListener('click', () => setScale(scale + 0.5));
   downloadButton.addEventListener('click', downloadCurrent);
   stage.addEventListener('pointerdown', startDrag);
   stage.addEventListener('pointermove', drag);
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', endDrag);
+  lightbox.addEventListener('wheel', zoomWithWheel, { passive: false });
 
   lightbox.addEventListener('click', (event) => {
     if (event.target === lightbox && !suppressBackdropClick) {

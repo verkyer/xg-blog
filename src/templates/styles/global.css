@@ -1913,6 +1913,11 @@ pagefind-modal[data-pf-theme="dark"] {
   color: var(--shiki-dark, var(--code-text)) !important;
 }
 
+.astro-code[data-language="plaintext"],
+.astro-code[data-language="plaintext"] span {
+  color: var(--code-text) !important;
+}
+
 .copy-code {
   position: absolute;
   top: 10px;
@@ -1956,22 +1961,16 @@ pagefind-modal[data-pf-theme="dark"] {
 
 .prose th {
   color: var(--text);
-  background: var(--paper-muted);
   font-weight: 760;
 }
 
 .prose tbody tr > :first-child {
   color: var(--text);
   white-space: nowrap;
-  background: color-mix(in srgb, var(--paper-muted) 68%, transparent);
 }
 
-.prose tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--paper-muted) 42%, transparent);
-}
-
-.prose tbody tr:nth-child(even) > :first-child {
-  background: color-mix(in srgb, var(--paper-muted) 82%, transparent);
+.prose tbody tr:nth-child(even) > * {
+  background: color-mix(in srgb, var(--mark-soft) 42%, transparent);
 }
 
 .prose td.is-merged-cell {
@@ -2182,6 +2181,10 @@ pagefind-modal[data-pf-theme="dark"] {
   transform-origin: center;
 }
 
+.xg-lightbox img.xg-lightbox-transition-image {
+  pointer-events: none;
+}
+
 .xg-lightbox figcaption {
   position: relative;
   z-index: 2;
@@ -2278,7 +2281,7 @@ pagefind-modal[data-pf-theme="dark"] {
 .xg-lightbox button.xg-lightbox-prev:hover,
 .xg-lightbox button.xg-lightbox-next:hover {
   background: color-mix(in srgb, var(--paper-strong) 44%, transparent);
-  border-color: var(--accent);
+  border-color: var(--hover-outline);
 }
 
 .xg-lightbox button.xg-lightbox-prev svg,
