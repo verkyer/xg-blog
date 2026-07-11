@@ -205,10 +205,13 @@ function initImageZoom() {
   let wheelGestureActive = false;
   let wheelGestureTimer;
   let transitioning = false;
+  let transitionTrack;
+  let transitionTimer;
   let pinchDistance = 0;
   const zoomStep = 0.5;
-  const maxScale = 2.5;
+  const maxScale = 2;
   const pinchThreshold = 12;
+  const transitionDuration = 360;
 
   const lightbox = document.createElement('div');
   lightbox.className = 'xg-lightbox';
@@ -415,7 +418,17 @@ function initImageZoom() {
     closeButton.focus();
   };
 
+  const completeTransition = () => {
+    window.clearTimeout(transitionTimer);
+    transitionTimer = undefined;
+    transitionTrack?.remove();
+    transitionTrack = undefined;
+    preview.style.visibility = '';
+    transitioning = false;
+  };
+
   const close = () => {
+    completeTransition();
     lightbox.classList.remove('is-open');
     document.body.style.overflow = '';
     window.clearTimeout(wheelGestureTimer);
@@ -429,52 +442,56 @@ function initImageZoom() {
 
     transitioning = true;
     const direction = step > 0 ? 1 : -1;
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
     const outgoingRect = preview.getBoundingClientRect();
     const outgoing = preview.cloneNode();
+    const track = document.createElement('div');
 
-    outgoing.classList.add('xg-lightbox-transition-image');
-    outgoing.setAttribute('aria-hidden', 'true');
-    Object.assign(outgoing.style, {
-      position: 'fixed',
-      top: `${outgoingRect.top}px`,
-      left: `${outgoingRect.left}px`,
-      width: `${outgoingRect.width}px`,
-      height: `${outgoingRect.height}px`,
-      transform: 'translateX(0)',
-    });
-    lightbox.append(outgoing);
+    const positionTransitionImage = (image, rect, offsetX) => {
+      image.classList.add('xg-lightbox-transition-image');
+      image.setAttribute('aria-hidden', 'true');
+      Object.assign(image.style, {
+        position: 'absolute',
+        top: `${rect.top}px`,
+        left: `${rect.left + offsetX}px`,
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        transform: 'none',
+        visibility: 'visible',
+      });
+    };
+
+    track.className = 'xg-lightbox-transition-track';
+    positionTransitionImage(outgoing, outgoingRect, 0);
+    track.append(outgoing);
+    lightbox.append(track);
+    transitionTrack = track;
     preview.style.visibility = 'hidden';
     activeIndex = (activeIndex + step + images.length) % images.length;
     render(() => {
-      const incomingTransform = preview.style.transform;
-      const offset = direction * 72;
-      const animationOptions = {
-        duration: 240,
-        easing: 'cubic-bezier(0.22, 0.76, 0.24, 1)',
-        fill: 'both',
-      };
+      if (transitionTrack !== track) {
+        return;
+      }
 
-      preview.style.visibility = '';
-      const outgoingAnimation = outgoing.animate(
-        [
-          { transform: 'translateX(0)' },
-          { transform: `translateX(${-offset}px)` },
-        ],
-        animationOptions,
-      );
-      const incomingAnimation = preview.animate(
-        [
-          {
-            transform: `translate(calc(-50% + ${offset}px), -50%) scale(${scale})`,
-          },
-          { transform: incomingTransform },
-        ],
-        animationOptions,
-      );
+      const incoming = preview.cloneNode();
+      const incomingRect = preview.getBoundingClientRect();
 
-      Promise.allSettled([outgoingAnimation.finished, incomingAnimation.finished]).then(() => {
-        outgoing.remove();
-        transitioning = false;
+      positionTransitionImage(incoming, incomingRect, direction * viewportWidth);
+      track.append(incoming);
+      track.addEventListener(
+        'transitionend',
+        (event) => {
+          if (event.target === track) {
+            completeTransition();
+          }
+        },
+        { once: true },
+      );
+      transitionTimer = window.setTimeout(completeTransition, transitionDuration + 80);
+      window.requestAnimationFrame(() => {
+        if (transitionTrack === track) {
+          track.style.transform = `translate3d(${-direction * viewportWidth}px, 0, 0)`;
+        }
       });
     });
   };

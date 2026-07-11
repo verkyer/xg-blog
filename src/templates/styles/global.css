@@ -2179,11 +2179,26 @@ pagefind-modal[data-pf-theme="dark"] {
   user-select: none;
   -webkit-user-drag: none;
   transform-origin: center;
+  transition: transform 0.18s ease;
+  will-change: transform;
 }
 
-.xg-lightbox img.xg-lightbox-transition-image {
+.xg-lightbox-stage.is-dragging img {
+  transition: none;
+}
+
+.xg-lightbox-transition-track {
+  position: fixed;
+  inset: 0;
   z-index: 2;
   pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.36s cubic-bezier(0.22, 0.76, 0.24, 1);
+  will-change: transform;
+}
+
+.xg-lightbox-transition-track img.xg-lightbox-transition-image {
+  transition: none;
 }
 
 .xg-lightbox figcaption {
