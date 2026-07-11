@@ -57,13 +57,25 @@ blog/posts/my-first-post/
 
 `npm run build` 之后，`dist/` 目录里就是完整的静态站点文件。
 
-- **直接部署静态文件**：把 `dist/` 里的内容丢到任意静态服务器上就行（Nginx、Apache、OSS 等）。
-- **Fork 仓库 + 平台自动部署**：把项目 fork 到自己的 GitHub / GitLab 仓库，然后连接到你喜欢的平台一键启动：
-  - **Cloudflare Pages / Workers**：直接关联仓库，构建命令填 `npm run build`，输出目录填 `dist`，每次推送代码自动部署。
-  - **EdgeOne Pages**：同样关联 Git 仓库，自动识别框架或手动配置构建命令和输出目录。
-  - 其他支持静态站点的平台（Vercel、Netlify 等）也都是同样的套路。
+#### 直接部署静态文件
 
-不需要服务器，不需要运维，写完文章 git push 一下就能更新站点。
+把 `dist/` 里的内容丢到任意静态服务器上就行（Nginx、Apache、OSS 等）。
+
+#### Fork 仓库 + 平台自动部署
+
+把项目 fork 到自己的 GitHub / GitLab 仓库，然后连接到你喜欢的平台一键启动：
+
+#### Cloudflare Pages / Workers
+  
+直接关联仓库，构建命令填 `npm run build`，输出目录填 `dist`，每次推送代码自动部署。
+
+#### EdgeOne Pages
+
+同样关联 Git 仓库，自动识别框架或手动配置构建命令和输出目录。
+
+#### 其他支持静态站点的平台（Vercel、Netlify 等）
+
+也都是同样的套路，不需要服务器，不需要运维，写完文章 git push 一下就能更新站点。
 
 ## 内容完善
 

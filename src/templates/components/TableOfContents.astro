@@ -22,10 +22,14 @@ const tocHeadings = visible.map((heading) => {
     currentH3 = heading.slug;
   }
 
+  const parentH2 = heading.depth === 2 ? heading.slug : currentH2;
+  const parentH3 = heading.depth === 3 ? heading.slug : currentH3;
+
   return {
     ...heading,
-    parentH2: heading.depth === 2 ? heading.slug : currentH2,
-    parentH3: heading.depth === 3 ? heading.slug : currentH3,
+    parentH2,
+    parentH3,
+    indent: heading.depth === 2 ? 0 : heading.depth === 3 || !parentH3 ? 1 : 2,
   };
 });
 ---
@@ -36,7 +40,7 @@ const tocHeadings = visible.map((heading) => {
     <ol>
       {tocHeadings.map((heading) => (
         <li
-          class={`depth-${heading.depth}`}
+          class={`depth-${heading.depth} indent-${heading.indent}`}
           data-toc-item
           data-depth={heading.depth}
           data-parent-h2={heading.parentH2}

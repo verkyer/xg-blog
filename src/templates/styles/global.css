@@ -1698,20 +1698,33 @@ pagefind-modal[data-pf-theme="dark"] {
 
 .toc ol {
   display: grid;
-  gap: 2px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .toc a {
+  position: relative;
   display: block;
-  padding: 5px 0;
+  padding: 5px 0 5px 14px;
   color: var(--text-muted);
   font-size: 0.83rem;
   line-height: 1.5;
   text-decoration: none;
   transition: color 0.16s ease;
+}
+
+.toc a::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  content: "";
+  background: currentColor;
+  opacity: 0.45;
+  transition: width 0.16s ease, opacity 0.16s ease;
 }
 
 .toc a:hover {
@@ -1728,12 +1741,26 @@ pagefind-modal[data-pf-theme="dark"] {
   font-weight: 400;
 }
 
-.toc .depth-3 {
-  padding-left: 13px;
+.toc li.is-active a::before,
+.toc a[aria-current="true"]::before {
+  width: 3px;
+  opacity: 1;
 }
 
-.toc .depth-4 {
-  padding-left: 26px;
+.toc .indent-1 {
+  padding-left: 14px;
+}
+
+.toc .indent-1 a::before {
+  left: -14px;
+}
+
+.toc .indent-2 {
+  padding-left: 24px;
+}
+
+.toc .indent-2 a::before {
+  left: -24px;
 }
 
 .toc .depth-4 a {
