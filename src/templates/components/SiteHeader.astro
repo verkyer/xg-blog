@@ -9,7 +9,7 @@ interface Props {
 const site = getSite();
 const navItems = menuData;
 const { currentPath } = Astro.props;
-const xgBlogVersion = 'XG-Blog v0.5.3';
+const xgBlogVersion = 'v0.5.5';
 
 const normalizeTarget = (target?: string | null) => (target === 'blank' || target === '_blank' ? '_blank' : undefined);
 const normalizeHref = (href?: string | null) => href?.trim() ?? '';
@@ -91,35 +91,35 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
         );
       })}
       <div class="mobile-nav-links" aria-label="站点工具">
-        <a href="/rss.xml" class="mobile-nav-link">
-          <svg viewBox="0 0 18 18" aria-hidden="true">
-            <path d="M4 4c5.5 0 10 4.5 10 10" />
-            <path d="M4 8c3.3 0 6 2.7 6 6" />
-            <circle cx="5" cy="13" r="1.2" />
+        <a href="/rss.xml" aria-label="RSS" class="mobile-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 11a9 9 0 0 1 9 9" />
+            <path d="M4 4a16 16 0 0 1 16 16" />
+            <circle cx="5" cy="19" r="1" />
           </svg>
           RSS
         </a>
-        <span aria-hidden="true">·</span>
-        <a href="/sitemap.xml" class="mobile-nav-link">
-          <svg viewBox="0 0 18 18" aria-hidden="true">
-            <path d="M9 4v4" />
-            <path d="M5 10h8" />
-            <rect x="6.5" y="2.5" width="5" height="3.5" rx="1" />
-            <rect x="2.5" y="10.5" width="5" height="4" rx="1" />
-            <rect x="10.5" y="10.5" width="5" height="4" rx="1" />
+        <a href="/sitemap.xml" aria-label="网站地图" class="mobile-nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.382V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />
+            <path d="M15 5.764v15" />
+            <path d="M9 3.236v15" />
           </svg>
-          Sitemap
+          网站地图
         </a>
-        <span aria-hidden="true">·</span>
         <a
           href="https://github.com/verkyer/xg-blog"
           target="_blank"
           rel="noopener noreferrer"
-          title={xgBlogVersion}
           aria-label={xgBlogVersion}
           class="mobile-nav-link"
         >
-          @ XG-Blog
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
+          </svg>
+          {xgBlogVersion}
         </a>
       </div>
     </nav>
