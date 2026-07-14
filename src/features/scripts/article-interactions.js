@@ -686,8 +686,10 @@ function initImageZoom() {
     if (event.key === 'Escape') {
       close();
     } else if (event.key === 'ArrowLeft') {
+      closeButton.blur();
       move(-1);
     } else if (event.key === 'ArrowRight') {
+      closeButton.blur();
       move(1);
     }
   });
