@@ -11,7 +11,14 @@ const categories = await getAllCategories(posts);
 <BaseLayout title="分类目录" description="小鸽志全部文章分类目录。" canonical="/categories">
   <section class="container page-head">
     <div class="page-title-row">
-      <h1>分类目录</h1>
+      <h1 class="title-with-icon">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 12H3" />
+          <path d="M3 5h18" />
+          <path d="M9 19H3" />
+        </svg>
+        分类目录
+      </h1>
       <span>{categories.length} 个分类</span>
     </div>
   </section>

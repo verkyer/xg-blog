@@ -39,6 +39,11 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
             {itemHref ? (
               <a href={itemHref} target={itemTarget} rel={itemRel} class:list={['nav-link', { active: selfActive && !hasActiveChild }]}>
                 {item.label}
+                {hasChildren && (
+                  <svg class="nav-chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                )}
               </a>
             ) : hasChildren ? (
               <button
@@ -50,6 +55,9 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
                 data-submenu-toggle
               >
                 {item.label}
+                <svg class="nav-chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
               </button>
             ) : (
               <span class:list={['nav-link', { active: selfActive && !hasActiveChild }]}>
@@ -59,14 +67,19 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
             {hasChildren && (
               <>
                 <button
-                  class="submenu-toggle"
+                  class="submenu-toggle icon-button"
                   type="button"
                   aria-label={`展开${item.label}子菜单`}
                   aria-controls={submenuId}
                   aria-expanded="false"
                   data-submenu-toggle
                 >
-                  <span aria-hidden="true"></span>
+                  <svg class="swap-icon submenu-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                  <svg class="swap-icon submenu-collapse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m18 15-6-6-6 6" />
+                  </svg>
                 </button>
                 <div class="submenu" id={submenuId} data-submenu>
                   {subItems.map((child) => {
@@ -124,17 +137,38 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
       </div>
     </nav>
     <div class="header-actions">
-      <button class="search-toggle" type="button" aria-label="搜索文章" title="搜索文章" data-search-open>
-        <svg viewBox="0 0 18 18" aria-hidden="true">
-          <circle cx="8" cy="8" r="4.5" />
-          <path d="m11.2 11.2 3.1 3.1" />
+      <button class="search-toggle icon-button" type="button" aria-label="搜索文章" data-search-open>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
         </svg>
       </button>
-      <button class="theme-toggle" type="button" aria-label="切换深浅色主题" data-theme-toggle>◐</button>
-      <button class="nav-toggle" type="button" aria-label="打开导航菜单" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
+      <button class="theme-toggle icon-button" type="button" aria-label="切换深浅色主题" data-theme-toggle>
+        <svg class="swap-icon theme-moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+        <svg class="swap-icon theme-sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+      </button>
+      <button class="nav-toggle icon-button" type="button" aria-label="打开导航菜单" aria-controls="site-nav" aria-expanded="false" data-nav-toggle>
+        <svg class="swap-icon nav-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 6h16" />
+          <path d="M4 12h16" />
+          <path d="M4 18h16" />
+        </svg>
+        <svg class="swap-icon nav-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
       </button>
     </div>
   </div>
@@ -200,6 +234,7 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
   const setNavOpenState = (isOpen: boolean) => {
     header?.setAttribute('data-nav-open', String(isOpen));
     document.documentElement.toggleAttribute('data-mobile-nav-open', isOpen);
+    navToggle?.setAttribute('aria-label', isOpen ? '关闭导航菜单' : '打开导航菜单');
   };
 
   const closeNav = () => {
@@ -232,9 +267,8 @@ const isActiveHref = (href: string) => Boolean(href) && (currentPath === href ||
   const syncThemeToggle = () => {
     if (!themeToggle) return;
     const theme = getEffectiveTheme();
-    themeToggle.textContent = theme === 'dark' ? '☀' : '◐';
+    themeToggle.dataset.theme = theme;
     themeToggle.setAttribute('aria-label', theme === 'dark' ? '切换到浅色主题' : '切换到深色主题');
-    themeToggle.setAttribute('title', theme === 'dark' ? '切换到浅色主题' : '切换到深色主题');
   };
 
   syncBrandLogo();

@@ -329,7 +329,6 @@ function initImageZoom() {
 
     stage.style.width = `${Math.round(isAtDefault ? naturalWidth * defaultScale : Math.min(available.width, scaledWidth))}px`;
     stage.style.height = `${Math.round(isAtDefault ? naturalHeight * defaultScale : Math.min(available.height, scaledHeight))}px`;
-    syncNavigationPosition();
   };
 
   const clampTranslate = () => {
@@ -380,6 +379,7 @@ function initImageZoom() {
     preview.style.height = `${naturalHeight}px`;
     syncStageSize();
     updateControls();
+    syncNavigationPosition();
   };
 
   const render = (onReady) => {

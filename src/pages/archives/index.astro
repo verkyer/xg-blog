@@ -14,7 +14,14 @@ const lastPage = Math.max(1, Math.ceil(posts.length / POSTS_PER_ARCHIVE_PAGE));
 <BaseLayout title="文章归档" description="小鸽志全部文章按发布时间归档。" canonical="/archives">
   <section class="container narrow page-head">
     <div class="page-title-row">
-      <h1>文章归档</h1>
+      <h1 class="title-with-icon">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect width="20" height="5" x="2" y="3" rx="1" />
+          <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+          <path d="M10 12h4" />
+        </svg>
+        文章归档
+      </h1>
       <span>共 {posts.length} 篇文章</span>
     </div>
   </section>
