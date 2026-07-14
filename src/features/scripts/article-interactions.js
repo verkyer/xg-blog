@@ -202,13 +202,11 @@ function initImageZoom() {
   let translateY = 0;
   let dragState = null;
   let suppressBackdropClick = false;
-  let wheelGestureActive = false;
-  let wheelGestureTimer;
   let transitioning = false;
   let transitionTrack;
   let transitionTimer;
   let pinchDistance = 0;
-  const zoomStep = 0.5;
+  const zoomStep = 0.3;
   const maxScale = 2;
   const pinchThreshold = 12;
   const transitionDuration = 360;
@@ -431,8 +429,6 @@ function initImageZoom() {
     completeTransition();
     lightbox.classList.remove('is-open');
     document.body.style.overflow = '';
-    window.clearTimeout(wheelGestureTimer);
-    wheelGestureActive = false;
   };
 
   const move = (step) => {
@@ -499,16 +495,10 @@ function initImageZoom() {
   const zoomWithWheel = (event) => {
     event.preventDefault();
 
-    window.clearTimeout(wheelGestureTimer);
-    wheelGestureTimer = window.setTimeout(() => {
-      wheelGestureActive = false;
-    }, 160);
-
-    if (wheelGestureActive || event.deltaY === 0) {
+    if (event.deltaY === 0) {
       return;
     }
 
-    wheelGestureActive = true;
     setScale(scale + (event.deltaY < 0 ? zoomStep : -zoomStep));
   };
 
@@ -659,8 +649,14 @@ function initImageZoom() {
   });
 
   closeButton.addEventListener('click', close);
-  prevButton.addEventListener('click', () => move(-1));
-  nextButton.addEventListener('click', () => move(1));
+  prevButton.addEventListener('click', (event) => {
+    event.currentTarget.blur();
+    move(-1);
+  });
+  nextButton.addEventListener('click', (event) => {
+    event.currentTarget.blur();
+    move(1);
+  });
   actualButton.addEventListener('click', showActualSize);
   fitButton.addEventListener('click', fitToPage);
   zoomOutButton.addEventListener('click', () => setScale(scale - zoomStep));
