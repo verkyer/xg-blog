@@ -422,6 +422,7 @@ function initImageZoom() {
     transitionTrack?.remove();
     transitionTrack = undefined;
     preview.style.visibility = '';
+    stage.classList.remove('is-switching');
     transitioning = false;
   };
 
@@ -437,6 +438,7 @@ function initImageZoom() {
     }
 
     transitioning = true;
+    stage.classList.add('is-switching');
     const direction = step > 0 ? 1 : -1;
     const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
     const outgoingRect = preview.getBoundingClientRect();

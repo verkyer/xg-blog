@@ -2183,7 +2183,8 @@ pagefind-modal[data-pf-theme="dark"] {
   will-change: transform;
 }
 
-.xg-lightbox-stage.is-dragging img {
+.xg-lightbox-stage.is-dragging img,
+.xg-lightbox-stage.is-switching img {
   transition: none;
 }
 
