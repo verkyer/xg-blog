@@ -443,7 +443,7 @@ button.submenu-link {
 
 .icon-button svg {
   width: 18px;
-  height: 18px;
+  height: 20px;
   flex: 0 0 auto;
 }
 
@@ -693,7 +693,7 @@ pagefind-modal[data-pf-theme="dark"] {
   bottom: 8px;
   z-index: 3;
   display: flex;
-  gap: 5px;
+  gap: 7px;
   align-items: center;
   padding: 3px 6px;
   background: color-mix(in srgb, var(--paper-strong) 32%, transparent);
@@ -857,12 +857,12 @@ pagefind-modal[data-pf-theme="dark"] {
   margin-top: 3px;
   padding: 0 5px;
   color: #fff;
-  background: #d96b6e;
-  border: 1px solid rgba(148, 57, 62, 0.14);
+  background: #F63120;
+  border: 0;
   border-radius: 4px;
   box-shadow: none;
   font-family: var(--sans);
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   font-weight: 650;
   line-height: 1;
 }
