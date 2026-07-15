@@ -22,12 +22,16 @@ const coverAlt = `${post.data.title} 封面图`;
     ) : (
       <Image src={cover} alt={coverAlt} loading="lazy" />
     )}
-    {isPinned && (
-      <span class="pin-label" aria-label="置顶文章" title="置顶文章">置顶</span>
-    )}
   </a>
   <div class="card-body">
-    <h2><a href={href}>{post.data.title}</a></h2>
+    <h2>
+      <a class="card-title-link" href={href}>
+        {isPinned && (
+          <span class="card-pin-label">置顶</span>
+        )}
+        <span class="card-title-text">{post.data.title}</span>
+      </a>
+    </h2>
     <p>{post.data.description}</p>
     <PostMeta date={post.data.date} categories={post.data.categories} tags={post.data.tags} compact showTags={false} />
   </div>

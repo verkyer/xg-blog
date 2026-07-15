@@ -5,6 +5,12 @@ interface Heading {
   text: string;
 }
 
+interface TocHeading extends Heading {
+  parentH2: string;
+  parentH3: string;
+  children: TocHeading[];
+}
+
 interface Props {
   headings: Heading[];
 }
@@ -13,7 +19,7 @@ const { headings } = Astro.props;
 const visible = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 4);
 let currentH2 = '';
 let currentH3 = '';
-const tocHeadings = visible.map((heading) => {
+const tocHeadings: TocHeading[] = visible.map((heading) => {
   if (heading.depth === 2) {
     currentH2 = heading.slug;
     currentH3 = '';
@@ -29,24 +35,87 @@ const tocHeadings = visible.map((heading) => {
     ...heading,
     parentH2,
     parentH3,
-    indent: heading.depth === 2 ? 0 : heading.depth === 3 || !parentH3 ? 1 : 2,
+    children: [],
   };
 });
+
+const tocTree: TocHeading[] = [];
+let parentH2Node: TocHeading | undefined;
+let parentH3Node: TocHeading | undefined;
+
+for (const heading of tocHeadings) {
+  if (heading.depth === 2) {
+    tocTree.push(heading);
+    parentH2Node = heading;
+    parentH3Node = undefined;
+    continue;
+  }
+
+  if (heading.depth === 3) {
+    (parentH2Node?.children ?? tocTree).push(heading);
+    parentH3Node = heading;
+    continue;
+  }
+
+  (parentH3Node?.children ?? parentH2Node?.children ?? tocTree).push(heading);
+}
 ---
 
 {tocHeadings.length > 0 && (
   <nav class="toc" aria-label="文章目录" data-toc>
-    <h2>文章目录</h2>
+    <h2>
+      <span class="title-with-icon">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5h10" />
+          <path d="M11 12h10" />
+          <path d="M11 19h10" />
+          <path d="M4 4h1v5" />
+          <path d="M4 9h2" />
+          <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
+        </svg>
+        文章目录
+      </span>
+    </h2>
     <ol>
-      {tocHeadings.map((heading) => (
+      {tocTree.map((heading) => (
         <li
-          class={`depth-${heading.depth} indent-${heading.indent}`}
+          class={`depth-${heading.depth}`}
           data-toc-item
           data-depth={heading.depth}
           data-parent-h2={heading.parentH2}
           data-parent-h3={heading.parentH3}
         >
           <a href={`#${heading.slug}`} data-toc-link>{heading.text}</a>
+          {heading.children.length > 0 && (
+            <ol>
+              {heading.children.map((child) => (
+                <li
+                  class={`depth-${child.depth}`}
+                  data-toc-item
+                  data-depth={child.depth}
+                  data-parent-h2={child.parentH2}
+                  data-parent-h3={child.parentH3}
+                >
+                  <a href={`#${child.slug}`} data-toc-link>{child.text}</a>
+                  {child.children.length > 0 && (
+                    <ol>
+                      {child.children.map((grandchild) => (
+                        <li
+                          class={`depth-${grandchild.depth}`}
+                          data-toc-item
+                          data-depth={grandchild.depth}
+                          data-parent-h2={grandchild.parentH2}
+                          data-parent-h3={grandchild.parentH3}
+                        >
+                          <a href={`#${grandchild.slug}`} data-toc-link>{grandchild.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
         </li>
       ))}
     </ol>

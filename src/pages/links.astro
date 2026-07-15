@@ -8,9 +8,8 @@ const allLinks = linkData;
 <BaseLayout title="友情链接" description="小鸽志友情链接和常用资源。" canonical="/links">
   <section class="container page-head">
     <h1 class="title-with-icon">
-      <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      <svg class="title-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path fill="currentColor" fill-rule="evenodd" d="M3.47 6.53a.75.75 0 0 1 1.06 1.061l-.727.727a2.743 2.743 0 0 0 3.879 3.879l.727-.727a.75.75 0 0 1 1.06 1.06l-.726.727a4.243 4.243 0 0 1-6-6zm8 1.879a.75.75 0 0 0 1.06 1.06l.727-.726a4.243 4.243 0 0 0-6-6l-.727.727a.75.75 0 0 0 1.061 1.06l.727-.727a2.743 2.743 0 0 1 3.879 3.879zm-.94-1.879a.75.75 0 1 0-1.06-1.06l-4 4a.75.75 0 1 0 1.06 1.06z" clip-rule="evenodd" />
       </svg>
       友情链接
     </h1>
@@ -24,7 +23,9 @@ const allLinks = linkData;
           {group.links.map((link) => (
             <a class="taxonomy-card link-card" href={link.url} target="_blank" rel="noopener noreferrer">
               <div class="link-card-head">
-                {link.icon && <img class="link-avatar" src={link.icon} alt="" loading="lazy" />}
+                <span class="link-avatar" aria-hidden="true">
+                  {link.icon && <img class="link-avatar-image" src={link.icon} alt="" loading="lazy" />}
+                </span>
                 <h3>{link.name}</h3>
               </div>
               <p>{link.desc}</p>

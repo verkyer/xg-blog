@@ -1,3 +1,24 @@
+function initProseLinks() {
+  const links = document.querySelectorAll('.prose a[href]');
+
+  for (const link of links) {
+    const href = link.getAttribute('href');
+
+    if (!href) {
+      continue;
+    }
+
+    try {
+      const url = new URL(href, window.location.href);
+      const isExternal = (url.protocol === 'http:' || url.protocol === 'https:') && url.origin !== window.location.origin;
+
+      link.dataset.linkKind = isExternal ? 'external' : 'internal';
+    } catch {
+      link.dataset.linkKind = 'internal';
+    }
+  }
+}
+
 // 同步文章目录的当前阅读位置高亮。
 function initTocActive() {
   const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
@@ -750,6 +771,7 @@ function initTableMerge() {
   }
 }
 
+initProseLinks();
 initTocActive();
 initCodeCopy();
 initTableMerge();
