@@ -26,10 +26,12 @@ const coverAlt = `${post.data.title} 封面图`;
   <div class="card-body">
     <h2>
       <a class="card-title-link" href={href}>
-        {isPinned && (
-          <span class="card-pin-label">置顶</span>
-        )}
-        <span class="card-title-text">{post.data.title}</span>
+        <span class="card-title-text">
+          {isPinned && (
+            <span class="card-pin-label">置顶</span>
+          )}
+          {post.data.title}
+        </span>
       </a>
     </h2>
     <p>{post.data.description}</p>

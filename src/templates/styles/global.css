@@ -834,9 +834,7 @@ pagefind-modal[data-pf-theme="dark"] {
 }
 
 .card-title-link {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 5px;
+  display: inline-block;
   max-width: 100%;
   text-decoration: none;
 }
@@ -852,10 +850,11 @@ pagefind-modal[data-pf-theme="dark"] {
 .card-pin-label {
   display: inline-flex;
   align-items: center;
-  flex: 0 0 auto;
-  height: 18px;
-  margin-top: 3px;
+  height: 16px;
+  margin-right: 2px;
   padding: 0 5px;
+  vertical-align: middle;
+  transform: translateY(-2px);
   color: #fff;
   background: #F63120;
   border: 0;
