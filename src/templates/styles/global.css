@@ -447,10 +447,31 @@ button.submenu-link {
   flex: 0 0 auto;
 }
 
-.icon-button:hover,
 .icon-button:focus-visible {
   color: var(--accent-strong);
   background: var(--mark-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .icon-button:hover {
+    color: var(--accent-strong);
+    background: var(--mark-soft);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .search-toggle,
+  .theme-toggle,
+  .nav-toggle {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .search-toggle:active,
+  .theme-toggle:active,
+  .nav-toggle:active {
+    color: var(--accent-strong);
+    background: var(--mark-soft);
+  }
 }
 
 .icon-button .swap-icon {
@@ -2258,17 +2279,20 @@ pagefind-modal[data-pf-theme="dark"] {
 }
 
 .xg-lightbox figcaption {
-  position: relative;
-  z-index: 2;
+  position: fixed;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 4;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
   gap: 10px;
   max-width: 100%;
-  color: var(--text-soft);
-  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
   text-align: center;
+  transform: translateX(-50%);
 }
 
 .xg-lightbox button {
@@ -2398,9 +2422,11 @@ pagefind-modal[data-pf-theme="dark"] {
 
 .xg-lightbox-counter {
   flex: 0 0 auto;
-  color: var(--text-muted);
+  color: inherit;
   font-family: var(--mono);
+  font-size: 0.72rem;
   font-weight: 800;
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -2895,6 +2921,7 @@ pagefind-modal[data-pf-theme="dark"] {
     z-index: 2;
     display: flex;
     flex-wrap: wrap;
+    gap: 5px;
     width: calc(var(--mobile-nav-width) - 16px);
     margin: 10px 8px 0 auto;
     padding: 12px 4px 0;
@@ -3150,6 +3177,10 @@ pagefind-modal[data-pf-theme="dark"] {
     right: 16px;
     gap: 0;
     padding: 3px;
+  }
+
+  .xg-lightbox figcaption {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
 
   .xg-lightbox-actual {
