@@ -62,62 +62,87 @@ for (const heading of tocHeadings) {
 ---
 
 {tocHeadings.length > 0 && (
-  <nav class="toc" aria-label="文章目录" data-toc>
-    <h2>
-      <span class="title-with-icon">
-        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M11 5h10" />
-          <path d="M11 12h10" />
-          <path d="M11 19h10" />
-          <path d="M4 4h1v5" />
-          <path d="M4 9h2" />
-          <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
-        </svg>
-        文章目录
-      </span>
-    </h2>
-    <ol>
-      {tocTree.map((heading) => (
-        <li
-          class={`depth-${heading.depth}`}
-          data-toc-item
-          data-depth={heading.depth}
-          data-parent-h2={heading.parentH2}
-          data-parent-h3={heading.parentH3}
-        >
-          <a href={`#${heading.slug}`} data-toc-link>{heading.text}</a>
-          {heading.children.length > 0 && (
-            <ol>
-              {heading.children.map((child) => (
-                <li
-                  class={`depth-${child.depth}`}
-                  data-toc-item
-                  data-depth={child.depth}
-                  data-parent-h2={child.parentH2}
-                  data-parent-h3={child.parentH3}
-                >
-                  <a href={`#${child.slug}`} data-toc-link>{child.text}</a>
-                  {child.children.length > 0 && (
-                    <ol>
-                      {child.children.map((grandchild) => (
-                        <li
-                          class={`depth-${grandchild.depth}`}
-                          data-toc-item
-                          data-depth={grandchild.depth}
-                          data-parent-h2={grandchild.parentH2}
-                          data-parent-h3={grandchild.parentH3}
-                        >
-                          <a href={`#${grandchild.slug}`} data-toc-link>{grandchild.text}</a>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                </li>
-              ))}
-            </ol>
-          )}
-        </li>
-      ))}
-    </ol>
-  </nav>
+  <>
+    <button
+      class="mobile-toc-toggle"
+      type="button"
+      aria-label="打开文章目录"
+      aria-controls="article-toc"
+      aria-expanded="false"
+      aria-hidden="true"
+      tabindex="-1"
+      data-mobile-toc-toggle
+    >
+      <svg class="mobile-toc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 5h10" />
+        <path d="M11 12h10" />
+        <path d="M11 19h10" />
+        <path d="M4 4h1v5" />
+        <path d="M4 9h2" />
+        <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
+      </svg>
+      <svg class="mobile-toc-toggle-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </button>
+    <nav class="toc" id="article-toc" aria-label="文章目录" data-toc data-mobile-toc-panel>
+      <h2>
+        <span class="title-with-icon">
+          <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5h10" />
+            <path d="M11 12h10" />
+            <path d="M11 19h10" />
+            <path d="M4 4h1v5" />
+            <path d="M4 9h2" />
+            <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
+          </svg>
+          文章目录
+        </span>
+      </h2>
+      <ol>
+        {tocTree.map((heading) => (
+          <li
+            class={`depth-${heading.depth}`}
+            data-toc-item
+            data-depth={heading.depth}
+            data-parent-h2={heading.parentH2}
+            data-parent-h3={heading.parentH3}
+          >
+            <a href={`#${heading.slug}`} data-toc-link>{heading.text}</a>
+            {heading.children.length > 0 && (
+              <ol>
+                {heading.children.map((child) => (
+                  <li
+                    class={`depth-${child.depth}`}
+                    data-toc-item
+                    data-depth={child.depth}
+                    data-parent-h2={child.parentH2}
+                    data-parent-h3={child.parentH3}
+                  >
+                    <a href={`#${child.slug}`} data-toc-link>{child.text}</a>
+                    {child.children.length > 0 && (
+                      <ol>
+                        {child.children.map((grandchild) => (
+                          <li
+                            class={`depth-${grandchild.depth}`}
+                            data-toc-item
+                            data-depth={grandchild.depth}
+                            data-parent-h2={grandchild.parentH2}
+                            data-parent-h3={grandchild.parentH3}
+                          >
+                            <a href={`#${grandchild.slug}`} data-toc-link>{grandchild.text}</a>
+                          </li>
+                        ))}
+                      </ol>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </>
 )}

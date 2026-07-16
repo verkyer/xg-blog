@@ -60,6 +60,10 @@ function initTocActive() {
       item?.classList.toggle('is-active', isActive);
       item?.classList.toggle('is-visible', isVisible);
     }
+
+    if (activeLink.closest('[data-mobile-toc-panel]')?.classList.contains('is-mobile-open')) {
+      activeLink.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
   };
 
   const updateActive = () => {
@@ -103,6 +107,78 @@ function initTocActive() {
   window.addEventListener('scroll', scheduleUpdate, { passive: true });
   window.addEventListener('hashchange', scheduleUpdate);
   updateActive();
+}
+
+function initMobileToc() {
+  const toggle = document.querySelector('[data-mobile-toc-toggle]');
+  const panel = document.querySelector('[data-mobile-toc-panel]');
+
+  if (!toggle || !panel) {
+    return;
+  }
+
+  const mobile = window.matchMedia('(max-width: 1020px)');
+  const hasComments = Boolean(document.querySelector('#comments'));
+  let open = false;
+
+  toggle.classList.toggle('has-comments', hasComments);
+  panel.classList.toggle('has-comments', hasComments);
+
+  const syncPanelAccessibility = () => {
+    if (mobile.matches) {
+      panel.setAttribute('aria-hidden', String(!open));
+      panel.toggleAttribute('inert', !open);
+      return;
+    }
+
+    panel.removeAttribute('aria-hidden');
+    panel.removeAttribute('inert');
+  };
+
+  const setOpen = (nextOpen) => {
+    open = Boolean(nextOpen && mobile.matches);
+    panel.classList.toggle('is-mobile-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '关闭文章目录' : '打开文章目录');
+    syncPanelAccessibility();
+
+    if (open) {
+      requestAnimationFrame(() => {
+        panel.querySelector('[aria-current="true"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      });
+    }
+
+    syncVisibility();
+  };
+
+  const syncVisibility = () => {
+    const visible = mobile.matches && (open || window.scrollY > 420);
+    toggle.classList.toggle('is-visible', visible);
+    toggle.setAttribute('aria-hidden', String(!visible));
+    toggle.tabIndex = visible ? 0 : -1;
+  };
+
+  const restoreFocus = () => {
+    if (toggle.classList.contains('is-visible')) {
+      toggle.focus();
+    } else if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
+
+  toggle.addEventListener('click', () => setOpen(!open));
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && open) {
+      setOpen(false);
+      restoreFocus();
+    }
+  });
+  window.addEventListener('scroll', syncVisibility, { passive: true });
+  mobile.addEventListener('change', () => {
+    setOpen(false);
+  });
+  setOpen(false);
 }
 
 // 为文章代码块补充语言标签和复制按钮。
@@ -773,6 +849,7 @@ function initTableMerge() {
 
 initProseLinks();
 initTocActive();
+initMobileToc();
 initCodeCopy();
 initTableMerge();
 initImageZoom();
