@@ -9,7 +9,7 @@ interface Props {
 const site = getSite();
 const navItems = menuData;
 const { currentPath } = Astro.props;
-const xgBlogVersion = 'v0.5.7';
+const xgBlogVersion = 'v0.5.8';
 
 const normalizeTarget = (target?: string | null) => (target === 'blank' || target === '_blank' ? '_blank' : undefined);
 const normalizeHref = (href?: string | null) => href?.trim() ?? '';
