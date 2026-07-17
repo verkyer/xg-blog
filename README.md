@@ -249,13 +249,13 @@ comments: false
 
 如果 `TWIKOO_ENV_ID` 留空，网站不会显示评论区，也不会加载 Twikoo 脚本。
 
-程序默认使用 Twikoo `1.7.13`。`TWIKOO_JS_URL` 一般不用改；没有配置或留空时，会使用默认 npmmirror 地址。
+程序默认使用 Twikoo `1.7.14`。`TWIKOO_JS_URL` 一般不用改；没有配置或留空时，会使用默认 npmmirror 地址。
 
 |使用场景|`TWIKOO_JS_URL`|
 |-|-|
-|默认|`https://registry.npmmirror.com/twikoo/1.7.13/files/dist/twikoo.min.js`|
-|国内备选|`https://s4.zstatic.net/npm/twikoo@1.7.13/dist/twikoo.min.js`|
-|全球推荐|`https://cdn.jsdelivr.net/npm/twikoo@1.7.13/dist/twikoo.min.js`|
+|默认|`https://registry.npmmirror.com/twikoo/1.7.14/files/dist/twikoo.min.js`|
+|国内备选|`https://s4.zstatic.net/npm/twikoo@1.7.14/dist/twikoo.min.js`|
+|全球推荐|`https://cdn.jsdelivr.net/npm/twikoo@1.7.14/dist/twikoo.min.js`|
 
 如果 `twikoo` js 更新、失效，可先手动指定版本，更多可查阅 [文档](https://twikoo.js.org/frontend.html#%E6%9B%B4%E6%8D%A2-cdn-%E9%95%9C%E5%83%8F)
 
@@ -317,7 +317,7 @@ comments: false
 |`BLOG_AVATAR_CIRCLE`|`true`|是否将作者头像裁成圆形；无变量或空值时开启，设置为 `false` 关闭|
 |`BLOG_BIO`|`这里填写博主简介。`|首页作者简介|
 |`TWIKOO_ENV_ID`|未配置时不启用|Twikoo 评论服务地址，例如 `https://twikoo.example.com`|
-|`TWIKOO_JS_URL`|`https://registry.npmmirror.com/twikoo/1.7.13/files/dist/twikoo.min.js`|Twikoo 前端脚本 CDN 地址，默认 `1.7.13` 版本；需要其他 CDN 时可换成上方可选地址|
+|`TWIKOO_JS_URL`|`https://registry.npmmirror.com/twikoo/1.7.14/files/dist/twikoo.min.js`|Twikoo 前端脚本 CDN 地址，默认 `1.7.14` 版本；需要其他 CDN 时可换成上方可选地址|
 
 ## 构建检查
 
