@@ -2761,7 +2761,7 @@ pagefind-modal[data-pf-theme="dark"] {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
-    width: min(280px, calc(100vw - 76px));
+    width: min(260px, calc(100vw - 76px));
     max-height: min(58vh, calc(100vh - env(safe-area-inset-bottom, 0px) - var(--mobile-toc-bottom) - var(--mobile-toc-step) - 16px), 420px);
     max-height: min(58vh, calc(100dvh - env(safe-area-inset-bottom, 0px) - var(--mobile-toc-bottom) - var(--mobile-toc-step) - 16px), 420px);
     padding: 14px 10px;
